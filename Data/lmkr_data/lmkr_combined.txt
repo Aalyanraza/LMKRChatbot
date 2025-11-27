@@ -1,0 +1,193 @@
+# LMKR Company Data Collection & Storage Guide
+
+## 📊 COMPREHENSIVE LMKR COMPANY INFORMATION
+
+### **Company Overview**
+- **Name:** LMKR
+- **Founded:** 1994
+- **Headquarters:** Houston, Texas
+- **Type:** Privately Held Technology Company
+- **Employees:** 201-500
+- **Industry:** Oil & Gas, Geoscience, Intelligent Transportation, Data Management, Agri-Tech, Clean Energy
+
+### **Mission Statement**
+"Enabling Innovation for a Smarter Future"
+
+---
+
+## 🏢 **Core Solutions & Products**
+
+### **1. GVERSE - Complete Geoscience Interpretation Platform**
+**What it is:**
+- Leading-edge geoscience software platform
+- Used for exploration and production in oil & gas industry
+
+**Features:**
+- Mapping and geological interpretation
+- Geophysical analysis
+- Petrophysical interpretation
+- Structural modeling
+- Well and field planning
+- State-of-the-art 3D visualization
+- Real-time seismic attribute analysis
+- Automated well top picking and fault detection
+- Multi-mode horizon interpretation (2D & 3D data)
+- Multi-well log interpretations
+- Dynamic reservoir modeling
+
+**Products in GVERSE Suite:**
+- GVERSE Geophysics (seismic interpretation)
+- GVERSE Petrophysics (log analysis)
+- GVERSE Attributes (attribute analysis)
+- GVERSE Predict3D (predictive modeling)
+- GVERSE WebSteering (well steering)
+- GVERSE Connect (data integration)
+- GVERSE Planner (field planning)
+- GVERSE Field Planner
+- GVERSE Inversion (enhanced interpretation)
+- GVERSE GO (subscription program - pay per use)
+
+**Related:**
+- GeoGraphix (partnership/integration software)
+- GVERSE E-STORE (online platform for purchasing/downloading applications)
+
+---
+
+### **2. TRVERSE - Comprehensive Smarter Urbanization Solution**
+**What it is:**
+- Intelligent Transportation Systems (ITS) for urban mobility
+
+**Services Include:**
+- Intelligent transportation systems
+- Station and vehicle security solutions
+- Real-time information systems for travelers
+- E-ticketing systems
+- Fleet management systems
+- Scheduling and dispatching
+- Automated fare collection
+- Video analytics and security monitoring
+
+**Notable Projects:**
+- **BRT Peshawar (Bus Rapid Transit):** Deployed 2020
+  - 27-kilometer dedicated busway corridor
+  - 30 stations
+  - Serves 60+ kilometers of direct services
+  - 220,000+ daily ridership (as of 2021)
+  - Features: Zu Mobile App, cashless payment, 24/7 video monitoring, AI-driven security
+
+**Sub-brands under TRVERSE:**
+- **LOADe (NIC Hyderabad):** Tech-enabled logistics platform for supply chain optimization
+- **Apaale (NIC Peshawar):** Ride-hailing and cargo booking marketplace
+- **Routify (NIC Karachi):** AI-powered route optimization for transit planning
+- **Zu Mobile App:** Mobile ticket and digital wallet for transportation
+
+---
+
+### **3. Information Management & Data Management Services**
+**Digital Data Management Services:**
+- Well data management
+- Data transcription & remastering services
+- Media conversion/data duplication
+- Data reformatting
+- Data quality assurance (QA) and quality checking (QC)
+- Data recovery
+- Document management
+- Data storage
+- Seismic scanning & vectorization
+
+**Corporate Data Management:**
+- Technical specification recommendations
+- End-to-end database implementation
+- Data loading and quality control
+- System support and troubleshooting
+- Data lifecycle preservation
+
+**Project Data Management:**
+- Data migration
+- Data loading and validation
+- Data consolidation and distribution
+- E&P data migration expertise
+
+**Physical Data Management:**
+- Consulting services
+- Data warehousing services
+- Data sorting, indexing, and cataloging
+
+**ISO-Certified Services**
+- Transforms complex E&P data into actionable knowledge
+- Provides secure, transparent, and auditable data management
+
+---
+
+### **4. Geoscience Services**
+**Exploration & Production (E&P) Studies:**
+- Basin and field-level studies
+- Conventional and unconventional resource identification
+- Sweet spot identification
+- Hydrocarbon potential assessment
+- Leads and prospects mapping
+- Reserves estimation
+- Asset evaluation
+- Reserves certification
+- Reservoir simulation
+
+**Geological Field Studies/Mapping:**
+- Remote sensing and GIS technologies
+- Structural geology expertise
+- Sedimentology analysis
+- Lateral and vertical formation extents
+- Lithofacies description
+- Fault identification
+- Biostratigraphy and stratigraphy logs
+- Sedimentary structures identification
+- Gross depositional environment mapping
+- Petrographic analysis
+
+---
+
+### **5. Consulting & Professional Services**
+- Strategic IT consulting
+- Technology advisory services
+- Digital transformation services
+- Software development consulting
+- AI-driven technology solutions
+- Complex problem-solving
+- Digital initiatives and partnerships
+
+---
+
+### **6. Other Ventures**
+- **Agri-Tech Solutions**
+- **Clean Energy Initiatives**
+- **Digital Media Services**
+- **Start-up Incubation Centers**
+
+---
+
+## 🌍 **Global Presence & Clients**
+- **Headquarters:** Houston, Texas, USA
+- **Offices:** Pakistan (Karachi, Peshawar, Hyderabad), USA
+- **Clients:** International oil companies, National oil companies, E&P services companies
+- **Industries Served:** Oil & Gas, Transportation, Agriculture, Energy, Urban Development
+
+---
+
+## 🤝 **Key Partnerships & Technologies**
+- **Halliburton Landmark** (iEnergy Core integration)
+- **Asian Development Bank** (ADB) - BRT Peshawar project
+- **GeoGraphix Suite** - integrated with GVERSE
+- **Contour Software**
+- **Devsinc** (IT Services partner)
+- **Ignite - National Technology Fund**
+
+---
+
+## 📈 **Recent Developments (2022-2025)**
+- GVERSE GeoGraphix 2022.1 release (October 2022)
+- Expansion of AI-powered route optimization (Routify)
+- Development of advanced security systems with video analytics
+- Launch of mobile app solutions (Zu, LOADe, Apaale)
+- Continuous innovation in seismic interpretation and petrophysical analysis
+- Showcasing at ATC 2024 (Advanced Technology Conference)
+
+---
