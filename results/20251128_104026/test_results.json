@@ -1,0 +1,42 @@
+[
+  {
+    "query": "hi",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "No response from API",
+    "timestamp": "2025-11-28T10:40:31.464692"
+  },
+  {
+    "query": "When was LMKR founded?",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "No response from API",
+    "timestamp": "2025-11-28T10:40:32.150499"
+  },
+  {
+    "query": "What is Gverse?",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "No response from API",
+    "timestamp": "2025-11-28T10:40:32.826694"
+  },
+  {
+    "query": "What are LMKR's main products?",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "No response from API",
+    "timestamp": "2025-11-28T10:40:33.519688"
+  },
+  {
+    "query": "Tell me about LMKR's partnerships",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "No response from API",
+    "timestamp": "2025-11-28T10:40:34.234770"
+  }
+]

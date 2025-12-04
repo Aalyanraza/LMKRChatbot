@@ -1,0 +1,42 @@
+[
+  {
+    "query": "hi",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "'InferenceClient' object has no attribute 'post'",
+    "timestamp": "2025-11-27T16:36:06.627691"
+  },
+  {
+    "query": "When was LMKR founded?",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "'InferenceClient' object has no attribute 'post'",
+    "timestamp": "2025-11-27T16:36:06.665766"
+  },
+  {
+    "query": "What is Gverse?",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "'InferenceClient' object has no attribute 'post'",
+    "timestamp": "2025-11-27T16:36:06.699463"
+  },
+  {
+    "query": "What are LMKR's main products?",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "'InferenceClient' object has no attribute 'post'",
+    "timestamp": "2025-11-27T16:36:06.729902"
+  },
+  {
+    "query": "Tell me about LMKR's partnerships",
+    "answer": "I don't have this information in my knowledge base.",
+    "source_count": 0,
+    "confidence": "LOW",
+    "error": "'InferenceClient' object has no attribute 'post'",
+    "timestamp": "2025-11-27T16:36:06.765838"
+  }
+]
