@@ -26,11 +26,12 @@ from langchain_core.runnables import RunnablePassthrough
 # ============================================================================
 CONFIG = {
     "project_name": "LMKR RAG Chatbot",
-    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    # CRITICAL UPDATE: Must match the model used in build_lmkr_rag_v2.py
+    "embedding_model": "sentence-transformers/all-mpnet-base-v2", 
     "vector_db_path": "./vector_db/faiss_lmkr",
     "llm_model": "mistralai/Mistral-7B-Instruct-v0.2",
     "max_tokens": 256,
-    "temperature": 0.1,
+    "temperature": 0.5,
     "top_p": 0.9,
     "retriever_k": 5,              # INCREASED from 2 to 5 - Get more candidates
     "similarity_threshold": 0.3,   # LOWERED from 0.5 - Less strict filtering
@@ -112,10 +113,14 @@ def load_rag_components():
         embeddings = HuggingFaceEmbeddings(
             model_name=CONFIG["embedding_model"],
             model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": False}
+            encode_kwargs={"normalize_embeddings": True} # MPNet benefits from normalization
         )
         
         # Vector store
+        if not os.path.exists(CONFIG["vector_db_path"]):
+             st.error(f"❌ Vector DB not found at {CONFIG['vector_db_path']}. Please run the builder script first.")
+             return None
+
         vectorstore = FAISS.load_local(
             CONFIG["vector_db_path"],
             embeddings,
@@ -131,7 +136,9 @@ def load_rag_components():
         # HF Client
         hf_token = os.getenv("HF_API_TOKEN")
         if not hf_token:
-            raise ValueError("HF_API_TOKEN not in .env")
+            # Fallback for Streamlit Cloud or local testing without .env
+            # You can remove this warning if you are sure .env exists
+            st.warning("⚠️ HF_API_TOKEN not found in environment variables. LLM generation may fail.")
         
         hf_client = InferenceClient(
             model=CONFIG["llm_model"],
@@ -148,6 +155,7 @@ def load_rag_components():
         }
     except Exception as e:
         logger.error(f"❌ Error loading RAG: {str(e)}")
+        st.error(f"Error loading RAG components: {e}")
         return None
 
 # ============================================================================
@@ -228,7 +236,20 @@ def get_relevant_sources(query: str) -> list:
     try:
         components = st.session_state.rag_components
         retriever = components["retriever"]
-        
+
+        # asking llm for for similar questions to add to query
+        '''SYSTEM_PROMPT1 = """You are an expert at finding similar questions for retrieval.
+Given the user question, provide 2 similar questions that would help in retrieving relevant documents.
+User Question: {query}
+"""
+        prompt = PromptTemplate(
+            input_variables=["query"],
+            template=SYSTEM_PROMPT1
+        )
+        similar_questions = query_hf_api(prompt.format(query=query))
+        query += " " + similar_questions.replace("\n", " ")
+        print(f"Expanded Query for Retrieval: {query}")'''
+
         # Get more documents
         docs = retriever.invoke(query)
         
@@ -240,7 +261,25 @@ def get_relevant_sources(query: str) -> list:
             }
             for doc in docs
         ]
+
         
+
+        '''# reranking based on cross-encoder similarity scores 
+        from sentence_transformers import CrossEncoder
+        cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+        query_embedding = cross_encoder.encode([query])
+        scored_sources = []
+        for src in sources:
+            doc_embedding = cross_encoder.encode([src["full_content"]])
+            score = cross_encoder.predict([query], [src["full_content"]])[0]
+            if score >= CONFIG["similarity_threshold"] * 10:  # Scale threshold
+                src["similarity_score"] = score
+                scored_sources.append(src)
+        # Sort by score descending
+        scored_sources.sort(key=lambda x: x["similarity_score"], reverse=True)'''
+        
+
+
         return sources
     except Exception as e:
         logger.error(f"Error getting sources: {e}")
@@ -316,7 +355,7 @@ if not st.session_state.initialized:
             st.session_state.initialized = True
             st.success("✅ Ready to chat!")
         else:
-            st.error("❌ Failed to load components")
+            st.error("❌ Failed to load components. Check logs.")
             st.stop()
 
 # ============================================================================
