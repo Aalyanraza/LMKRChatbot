@@ -7,6 +7,9 @@ from datetime import datetime
 from dotenv import load_dotenv
 import logging
 
+from sentence_transformers import CrossEncoder
+cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+
 # ============================================================================
 # LOGGING & SETUP
 # ============================================================================
@@ -49,6 +52,7 @@ CONVERSATION HISTORY:
 QUESTION: {question}
 
 Instructions:
+0. Only cite opinions when explicitly asked.
 1. Answer ONLY based on the provided context and conversation history.
 2. If the context and conversation history doesn't have the answer, say "I don't have this information in my knowledge base."
 3. Keep answers concise (1-2 sentences).
@@ -232,58 +236,70 @@ def query_hf_api(prompt: str) -> str:
         return f"Error: {str(e)}"
 
 def get_relevant_sources(query: str) -> list:
-    """Get source documents with metadata - IMPROVED"""
     try:
         components = st.session_state.rag_components
         retriever = components["retriever"]
 
-        # asking llm for for similar questions to add to query
-        '''SYSTEM_PROMPT1 = """You are an expert at finding similar questions for retrieval.
-Given the user question, provide 2 similar questions that would help in retrieving relevant documents.
-User Question: {query}
-"""
+        # Expand query
+        SYSTEM_PROMPT1 = """
+        You are an expert at finding similar questions for retrieval.
+        Given the user question, provide 2 similar questions that improve retrieval.
+        User Question: {query}
+        """
         prompt = PromptTemplate(
             input_variables=["query"],
             template=SYSTEM_PROMPT1
         )
+
         similar_questions = query_hf_api(prompt.format(query=query))
         query += " " + similar_questions.replace("\n", " ")
-        print(f"Expanded Query for Retrieval: {query}")'''
+        print(f"Expanded Query for Retrieval: {query}")
 
-        # Get more documents
+        # Retrieve documents
         docs = retriever.invoke(query)
-        
+
         sources = [
             {
-                "content": doc.page_content[:300],  # INCREASED from 250
-                "metadata": doc.metadata if hasattr(doc, "metadata") else {},
-                "full_content": doc.page_content  # Store full for debug
+                "content": doc.page_content[:300],
+                "metadata": getattr(doc, "metadata", {}),
+                "full_content": doc.page_content
             }
             for doc in docs
         ]
 
-        
+        # Rerank using CrossEncoder
+        pairs = [(query, src["full_content"]) for src in sources]
+        scores = cross_encoder.predict(pairs)
 
-        '''# reranking based on cross-encoder similarity scores 
-        from sentence_transformers import CrossEncoder
-        cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
-        query_embedding = cross_encoder.encode([query])
-        scored_sources = []
+        # Attach scores
+        for src, score in zip(sources, scores):
+            src["similarity_score"] = float(score)
+
+        # Sort
+        sources.sort(key=lambda x: x["similarity_score"], reverse=True)
+
         for src in sources:
-            doc_embedding = cross_encoder.encode([src["full_content"]])
-            score = cross_encoder.predict([query], [src["full_content"]])[0]
-            if score >= CONFIG["similarity_threshold"] * 10:  # Scale threshold
-                src["similarity_score"] = score
-                scored_sources.append(src)
-        # Sort by score descending
-        scored_sources.sort(key=lambda x: x["similarity_score"], reverse=True)'''
+            logger.info(f"Source Score: {src['similarity_score']:.4f} | Content Snippet: {src['content'][:100]}...")
+        # Filter with threshold
+        threshold = CONFIG["similarity_threshold"]
+        filtered = [s for s in sources if s["similarity_score"] >= threshold]
+        print("Filtered Sources Count:", len(filtered))
+        for src in filtered:
+            logger.info(f"✅ Passed Threshold: {src['similarity_score']:.4f} | Content Snippet: {src['content'][:100]}...") 
         
+        if not filtered:
+            logger.warning("No sources passed the similarity threshold. Returning top source.")
+            filtered = sources if sources else []
+        
+        if len(filtered) == 1:
+            filtered += sources[1:3]  # Add second best if available
+        
+        return filtered
 
-
-        return sources
     except Exception as e:
         logger.error(f"Error getting sources: {e}")
         return []
+    
 
 def format_history(history_list: list) -> str:
     """Format chat history for context"""
