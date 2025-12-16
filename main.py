@@ -23,7 +23,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, field_validator, model_validator
-from IPython.display import Image, display
 
 # Scraping Imports
 from selenium import webdriver
@@ -230,25 +229,6 @@ def clean_text_content(text: str) -> str:
         cleaned_lines.append(stripped)
 
     return "\n".join(cleaned_lines)
-
-@tool
-def scrape_contact_tool():
-    """
-    Scrapes the official LMKR contact page (https://lmkr.com/contact/) 
-    to retrieve live addresses, phone numbers, and emails.
-    """
-    
-    url = "https://lmkr.bamboohr.com/careers"
-    print(f"🕸️ Tool Triggered: Dynamically scraping {url}...")
-    
-    raw_text = fetch_and_clean_body(url)
-    clean_text = clean_text_content(raw_text)
-    
-    file_path = "live_contact_data.txt"
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(f"SOURCE: {url}\n\n{clean_text}")
-        
-    return clean_text
 
 @tool
 def scrape_careers_tool():
@@ -589,43 +569,6 @@ def career_retrieve_node(state: AgentState):
     print(f"   Retrieved {len(retrieved_texts)} relevant career chunks.")
     return {"context_chunks": retrieved_texts}
 
-# --- NODE 2: CAREER GENERATE ---
-def career_generate_node(state: AgentState):
-    print("\n✍️ Node: Career Generate...")
-    
-    question = state["question"]
-    context_data = "\n---\n".join(state["context_chunks"])
-    
-    if not context_data:
-        context_data = "No specific job openings found."
-
-    parser = PydanticOutputParser(pydantic_object=GeneratedAnswer)
-    
-    prompt = f"""
-    Context (Live Job Board Data):
-    {context_data}
-    
-    User Question: {question}
-    
-    Instructions:
-    1. ANALYZE the Context Data first. Does it contain specific job titles (e.g., "Software Engineer", "Geophysicist")?
-    2. If the Context Data only contains generic company info ("rewarding place to work", "benefits") but NO specific job titles, you MUST output: "I could not retrieve the live job list at this time."
-    3. If valid jobs are listed, answer the user's question.
-    4. WARNING: Do not invent job titles. Do not list jobs that are not explicitly in the text above.
-    """
-    
-    structured_response = query_llm_structured(prompt, parser)
-    
-    # Fallback
-    if not structured_response:
-        structured_response = GeneratedAnswer(
-            answer="I checked the careers page but couldn't parse the listings.", 
-            sources_used=["https://lmkr.com/careers/"]
-        )
-        
-    current_retries = state.get("retry_count", 0)
-    return {"generated_answer": structured_response, "retry_count": current_retries + 1}
-
 # ### News/ Announcements Path
 
 
@@ -790,18 +733,8 @@ app = workflow.compile()
 # --- 8. Execution Test ---
 
 print("🚀 Starting RAG Pipeline (Retrieve -> Generate -> Validate)...")
-import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-initial_state = {
-    "question": "HI", 
-    "retry_count": 0,
-    "context_chunks": [],
-    "generated_answer": None,
-    "validation": None
-}
 
-final_state = app.invoke(initial_state)
 
 # --- FASTAPI SETUP ---
 
