@@ -9,3 +9,5 @@ selenium
 pydantic
 jupyter
 ipykernel
+langchain_huggingface
+sentence-transformers
