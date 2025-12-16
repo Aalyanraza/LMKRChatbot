@@ -783,8 +783,6 @@ workflow.add_conditional_edges(
 workflow.add_edge("conversational_node", END)
 
 app = workflow.compile()
-# Visualize
-display(Image(app.get_graph().draw_mermaid_png()))
 
 # ## Step 5: Execution
 
@@ -818,6 +816,10 @@ class ChatResponse(BaseModel):
 
 # 2. Initialize API
 api = FastAPI(title="LMKR Chatbot API")
+
+@api.get("/")
+async def root():
+    return {"message": "Welcome to the LMKR RAG Chatbot API!. Use the /chat endpoint to interact."}
 
 @api.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
