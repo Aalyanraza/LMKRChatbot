@@ -1,0 +1,11 @@
+langchain
+langgraph
+langchain-community
+langchain-openai
+faiss-cpu
+beautifulsoup4
+requests
+selenium
+pydantic
+jupyter
+ipykernel
