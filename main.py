@@ -6,7 +6,7 @@
 # ## Step 1: Setup & Data Structures
 # We define strict Pydantic models for every node's output.
 
-
+import torch
 import os
 import json
 from typing import List, Optional, TypedDict, Literal
@@ -45,6 +45,7 @@ embeddings = HuggingFaceEmbeddings(
     model_kwargs={"device": "cpu"},
     encode_kwargs={"normalize_embeddings": True}
 )
+embeddings._client.to(dtype=torch.bfloat16)
 
 # Vector DB
 VECTOR_DB_PATH = "./vector_db/faiss_lmkr"

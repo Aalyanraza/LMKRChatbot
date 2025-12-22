@@ -56,4 +56,4 @@ if prompt := st.chat_input("What would you like to know?"):
                     st.error(f"Error {response.status_code}: {response.text}")
 
             except requests.exceptions.ConnectionError:
-                st.error("❌ Could not connect to the backend. Is 'main.py' running?")
+                st.error("❌ Could not connect to the backend.")
