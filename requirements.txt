@@ -1,16 +1,25 @@
+# --- Core Frameworks ---
 langchain
 langgraph
 langchain-community
-langchain-openai
-faiss-cpu
-beautifulsoup4
-requests
-selenium
-pydantic
-jupyter
-ipykernel
-langchain_huggingface
+langchain-huggingface
 sentence-transformers
+faiss-cpu
 fastapi
 uvicorn
 streamlit
+pydantic
+beautifulsoup4
+requests
+selenium
+python-dotenv
+
+# --- Guardrails AI & Validators ---
+guardrails-ai
+# Underlying packages for hub://guardrails/detect_pii and detect_prompt_injection
+guardrails-grhub-detect-pii
+guardrails-grhub-detect-prompt-injection
+
+# --- Validator Dependencies ---
+presidio-analyzer
+presidio-anonymizer
