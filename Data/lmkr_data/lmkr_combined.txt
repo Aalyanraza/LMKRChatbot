@@ -1,188 +1,120 @@
+--- CHUNK FROM GLOBAL_CONTEXT_HEADER_FOOTER ---
+=== COMPANY CONTACT & FOOTER INFO ===
+
+About Us
+
+LMKR’s diverse solution portfolio includes geoscience exploration, intelligent transport, data management, and consulting.
+
+Know More
+
+Browse
+
+ 
+Announcement
+
+Partnership
+
+Services & Expertise
+
+Software Grant
+
+Software Release
+
+Solutions
+
+Uncategorized
+
+Quick Contact 
+
+USA
+
+Houston, Texas 
+
++1.281.495.5657
+
+UAE
+
+Emaar Business Park, 
+Sheikh Zayed Road
+
++971 4 3209565
+
+MYS
+
+G-Tower, Kuala Lumpur
+
++603.2300.8700
+
+Contact
+
+Copyrights 2025 LMKR, All Rights Reserved.
+
+Privacy Policy and Terms of Use
+
+Facebook
+
+YouTube
+
+Twitter
+
+LinkedIn
+
+Instagram
+
+=== SITE NAVIGATION STRUCTURE ===
+
+| 
+ | 
+ | 
+ | 
+ | 
+ | About LMKR | Services & Expertise | Announcements | Careers | 
+ | 
+ | Contact | 
+ | 
+ | 
+ | 
+ |
+
 --- CHUNK FROM https://lmkr.com/ ---
 SOURCE DOCUMENT: https://lmkr.com/
-CONTENT:
-Enabling Innovation for a Smarter Future - LMKR
-Please click here if you are not redirected within a few seconds.
-About LMKRServices & ExpertiseAnnouncementsCareers
-Contact
-Enabling Innovation for a Smarter Future
-
---- CHUNK FROM https://lmkr.com/ ---
 We are a technology company with a broad portfolio of solutions that includes geoscience exploration, intelligent transportation, data management, and consulting services. With experience spanning multiple industries, we are technology advisors and partners for a number of digital initiatives such as Intelligent Transportation and Start-up Incubation Centers, among many.
 Explore
-Solutions 
-GVERSE
-
---- CHUNK FROM https://lmkr.com/ ---
-Explore
-Solutions 
+Solutions
 GVERSE
 A Complete Geoscience Interpretation Platform
 Leading-edge mapping, geological, geophysical & petrophysical interpretation, structural modeling, well and field planning, and state-of-the-art 3D visualization.
-Explore 
+Explore
 TRVERSE
 Comprehensive Smarter Urbanization Solution
 
 --- CHUNK FROM https://lmkr.com/ ---
-Explore 
+Explore
 TRVERSE
 Comprehensive Smarter Urbanization Solution
 Holistic mobility solutions for the cities of tomorrow; everything from intelligent transportation systems to station and vehicle security solutions as well as real-time information systems for travelers.
 Explore
 SERVICES & EXPERTISE
 Tech-driven Solutions Transforming Businesses
-
---- CHUNK FROM https://lmkr.com/ ---
-Explore
-SERVICES & EXPERTISE
-Tech-driven Solutions Transforming Businesses
 Transforming complex digital oilfield data and information into actionable knowledge; making it complete, transparent, auditable, and secure.
 Explore
-About Us
-LMKR’s diverse solution portfolio includes geoscience exploration, intelligent transport, data management, and consulting.
-Know More
-Browse
- Announcement
-Partnership
-
---- CHUNK FROM https://lmkr.com/ ---
-Explore
-About Us
-LMKR’s diverse solution portfolio includes geoscience exploration, intelligent transport, data management, and consulting.
-Know More
-Browse
- Announcement
-Partnership
-Services & Expertise
-Software Grant
-Software Release
-Solutions
-Quick Contact 
-USA
-Houston, Texas 
-+1.281.495.5657
-UAE
-Emaar Business Park, Sheikh Zayed Road
-+971 4 3209565
-MYS
-G-Tower, Kuala Lumpur
-+603.2300.8700
-
---- CHUNK FROM https://lmkr.com/ ---
-Software Grant
-Software Release
-Solutions
-Quick Contact 
-USA
-Houston, Texas 
-+1.281.495.5657
-UAE
-Emaar Business Park, Sheikh Zayed Road
-+971 4 3209565
-MYS
-G-Tower, Kuala Lumpur
-+603.2300.8700
-Contact
-Facebook
-YouTube
-Twitter
-LinkedIn
-Instagram
 
 --- CHUNK FROM https://lmkr.com/home/company/ ---
 SOURCE DOCUMENT: https://lmkr.com/home/company/
-CONTENT:
-About LMKR - LMKR
-Please click here if you are not redirected within a few seconds.
-About LMKRServices & ExpertiseAnnouncementsCareers
-Contact
-About LMKR
-
---- CHUNK FROM https://lmkr.com/home/company/ ---
-Founded in 1994, LMKR is a technology company with an extensive solutions portfolio that includes reservoir-centric interpretation, smart urbanization, agri-tech, big data services, AI-driven technology solutions, and consulting
-
---- CHUNK FROM https://lmkr.com/home/company/ ---
-. From geoscience exploration solutions to intelligent transportation, we have delivered successful projects for organizations of all sizes across diverse industries globally.
-
---- CHUNK FROM https://lmkr.com/home/company/ ---
-We are committed to delivering innovative technology solutions and services to our clients, and strive to explore new ways for businesses to use technology for different purposes.Our solutions combine a deep understanding of the current technology landscape with a proven methodology to ensure successful deployment, integration, and scalability.
-About Us
-
---- CHUNK FROM https://lmkr.com/home/company/ ---
-About Us
-LMKR’s diverse solution portfolio includes geoscience exploration, intelligent transport, data management, and consulting.
-Know More
-Browse
- Announcement
-Partnership
-Services & Expertise
-Software Grant
-Software Release
-Solutions
-Quick Contact 
-USA
-Houston, Texas 
-+1.281.495.5657
-UAE
-Emaar Business Park, Sheikh Zayed Road
-+971 4 3209565
-MYS
-G-Tower, Kuala Lumpur
-+603.2300.8700
-Contact
-
---- CHUNK FROM https://lmkr.com/home/company/ ---
-Software Grant
-Software Release
-Solutions
-Quick Contact 
-USA
-Houston, Texas 
-+1.281.495.5657
-UAE
-Emaar Business Park, Sheikh Zayed Road
-+971 4 3209565
-MYS
-G-Tower, Kuala Lumpur
-+603.2300.8700
-Contact
-Facebook
-YouTube
-Twitter
-LinkedIn
-Instagram
+Founded in 1994, LMKR is a technology company with an extensive solutions portfolio that includes reservoir-centric interpretation, smart urbanization, agri-tech, big data services, AI-driven technology solutions, and consulting. From geoscience exploration solutions to intelligent transportation, we have delivered successful projects for organizations of all sizes across diverse industries globally.
+We are committed to delivering innovative technology solutions and services to our clients, and strive to explore new ways for businesses to use technology for different purposes.
+Our solutions combine a deep understanding of the current technology landscape with a proven methodology to ensure successful deployment, integration, and scalability.
 
 --- CHUNK FROM https://lmkr.com/services-expertise/ ---
 SOURCE DOCUMENT: https://lmkr.com/services-expertise/
-CONTENT:
-Services & Expertise - LMKR
-Please click here if you are not redirected within a few seconds.
-About LMKRServices & ExpertiseAnnouncementsCareers
-Contact
-Services & Expertise
-GLOBALLY RECOGNIZED INNOVATIVE SOFTWARE SOLUTIONS AND CONSULTING SERVICES
-
---- CHUNK FROM https://lmkr.com/services-expertise/ ---
-Contact
-Services & Expertise
 GLOBALLY RECOGNIZED INNOVATIVE SOFTWARE SOLUTIONS AND CONSULTING SERVICES
 Our software solutions and data expertise is geared towards boosting production and enhancing profitability by integrating your business operations. Our extensive domain knowledge combined with software expertise can be delivered remotely or at your facility.
-SOFTWARE DEVELOPMENT
-
---- CHUNK FROM https://lmkr.com/services-expertise/ ---
 SOFTWARE DEVELOPMENT
 Experience streamlined work environments and process excellence that ensures on-time project delivery and increased productivity with reduced IT ownership costs and greater operational control.
 
 --- CHUNK FROM https://lmkr.com/services-expertise/ ---
+Experience streamlined work environments and process excellence that ensures on-time project delivery and increased productivity with reduced IT ownership costs and greater operational control.
 Take advantage of our over 2 decades of experience in aligning IT investments with strategic business priorities. Our software development and maintenance services aim at aligning investments strategically, offering:
-Software Development
-Software Testing Services
-Configuration Management
-DevOps
-Documentation Services
-CONSULTING
-
---- CHUNK FROM https://lmkr.com/services-expertise/ ---
 Software Development
 Software Testing Services
 Configuration Management
@@ -192,11 +124,8 @@ CONSULTING
 Achieve all your organizational goals with professionalism, precision and passion. Our innovative approach combines insights from the industry to help organizations navigate a complex world.
 
 --- CHUNK FROM https://lmkr.com/services-expertise/ ---
+Achieve all your organizational goals with professionalism, precision and passion. Our innovative approach combines insights from the industry to help organizations navigate a complex world.
 As a strategic advisor, we bring deep functional expertise along with a holistic perspective – capturing value across boundaries and between the silos of any organization to achieve agility, greater customer experience, and accelerated performance. Our data management consulting services include:
-Site assessments
-Data management processes, procedures & workflows
-
---- CHUNK FROM https://lmkr.com/services-expertise/ ---
 Site assessments
 Data management processes, procedures & workflows
 Data sorting, indexing and cataloging
@@ -208,8 +137,6 @@ Data sorting, indexing and cataloging
 DATA MANAGEMENT
 Transform complex digital oilfield data and information  into actionable knowledge to make critical decisions.
 ISO-certified solutions simplify your data and information management requirements and enable you to make informed decisions on your oil and gas assets while keeping costs in check. Here is a selection of our services:
-
---- CHUNK FROM https://lmkr.com/services-expertise/ ---
 Data Transformation (Conversion, Integration and Migration)
 Data Management (Physical, Project & Corporate)
 Complete Digitizing Solutions (Raster-to-Vector Conversion)
@@ -224,11 +151,8 @@ Data Management Consultancy
 Read More
 GEOSCIENCE SERVICES
 Make business critical decisions with the help of our experienced geoscientists and engineering consultants.
-Protect your investments with accurate and timely geological, geophysical and geotechnical analyses, seismic data processing and interpretation services.Services include:
-Geotechnical/Geophysical Studies
-Geoscience Consulting
-
---- CHUNK FROM https://lmkr.com/services-expertise/ ---
+Protect your investments with accurate and timely geological, geophysical and geotechnical analyses, seismic data processing and interpretation services.
+Services include:
 Geotechnical/Geophysical Studies
 Geoscience Consulting
 Software Support
@@ -236,666 +160,353 @@ Seismic Data Processing
 Petrophysical Services
 E&P Applications Data Management
 Read More
-About Us
-LMKR’s diverse solution portfolio includes geoscience exploration, intelligent transport, data management, and consulting.
-Know More
-Browse
- Announcement
-Partnership
-Services & Expertise
-Software Grant
-Software Release
-Solutions
-
---- CHUNK FROM https://lmkr.com/services-expertise/ ---
-Know More
-Browse
- Announcement
-Partnership
-Services & Expertise
-Software Grant
-Software Release
-Solutions
-Quick Contact 
-USA
-Houston, Texas 
-+1.281.495.5657
-UAE
-Emaar Business Park, Sheikh Zayed Road
-+971 4 3209565
-MYS
-G-Tower, Kuala Lumpur
-+603.2300.8700
-Contact
-Facebook
-YouTube
-Twitter
-LinkedIn
-Instagram
 
 --- CHUNK FROM https://lmkr.com/contact/ ---
 SOURCE DOCUMENT: https://lmkr.com/contact/
-CONTENT:
-Contact - LMKR
-Please click here if you are not redirected within a few seconds.
-About LMKRServices & ExpertiseAnnouncementsCareers
-Contact
-Contact
 We are dedicated to helping our clients maximize the impact of their digital initiatives, and our team of professionals is available to provide guidance in every step of the way.
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-Contact
-Contact
-We are dedicated to helping our clients maximize the impact of their digital initiatives, and our team of professionals is available to provide guidance in every step of the way. 
 Fill in your details below to get in touch!
-Go backYour message has been sent
-Name(required)
-Warning
-Email(required)
-Warning
-Phone(required)
-Warning
-Message(required)
-Warning
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-Fill in your details below to get in touch!
-Go backYour message has been sent
-Name(required)
-Warning
-Email(required)
-Warning
-Phone(required)
-Warning
-Message(required)
-Warning
+Go back
+Your message has been sent
+Name
+Email
+Phone
+Message
 Keep me updated with all the latest company information.
-Warning
-Warning.
- Contact UsSubmitting form
+Contact Us
+Submitting form
 North & South America
 United States
 LMK Resources Inc.
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-Warning
-Message(required)
-Warning
-Keep me updated with all the latest company information.
-Warning
-Warning.
- Contact UsSubmitting form
-North & South America
-United States
-LMK Resources Inc.
-Houston6051 North Course Drive, Suite 300,Houston, TX 77072, USAPhone: +1.281.495.5657
-Peter BatdorfPhone: 724.919.2506pbatdorf@lmkr.comCanada | Latin America
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-United States
-LMK Resources Inc.
-Houston6051 North Course Drive, Suite 300,Houston, TX 77072, USAPhone: +1.281.495.5657
-Peter BatdorfPhone: 724.919.2506pbatdorf@lmkr.comCanada | Latin America
-Russ PhillipsPhone: +1.587.225.5658rphillips@gverse.com
+Houston
+6051 North Course Drive, Suite 300,
+Houston, TX 77072, USA
+Phone: +1.281.495.5657
+Peter Batdorf
+Phone: 724.919.2506
+pbatdorf@lmkr.com
+Canada | Latin America
+Russ Phillips
+Phone: +1.587.225.5658
+rphillips@gverse.com
 Europe Middle East & Africa
 UAE
 LMKR Corporate Headquarters
 
 --- CHUNK FROM https://lmkr.com/contact/ ---
-Peter BatdorfPhone: 724.919.2506pbatdorf@lmkr.comCanada | Latin America
-Russ PhillipsPhone: +1.587.225.5658rphillips@gverse.com
+Peter Batdorf
+Phone: 724.919.2506
+pbatdorf@lmkr.com
+Canada | Latin America
+Russ Phillips
+Phone: +1.587.225.5658
+rphillips@gverse.com
 Europe Middle East & Africa
 UAE
 LMKR Corporate Headquarters
-Office No 512, 5th floor, CNPC Building 1, Emaar Business Park, Sheikh Zayed Road, Dubai, UAEPhone:  +971 4 3209565Fax: +971 4 2394099
+Office No 512, 5th floor, CNPC Building 1, Emaar Business Park, Sheikh Zayed Road, Dubai, UAE
+Phone:  +971 4 3209565
+Fax: +971 4 2394099
 office@lmkr.com
 Azerbaijan
 KTIB
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-UAE
-LMKR Corporate Headquarters
-Office No 512, 5th floor, CNPC Building 1, Emaar Business Park, Sheikh Zayed Road, Dubai, UAEPhone:  +971 4 3209565Fax: +971 4 2394099
-office@lmkr.com
-Azerbaijan
-KTIB
-Elmar Sultanovph.\тел. +(994)50.223.3696 Address: 29,Neftchi Gurban Abbasov str.Sapphire Plaza Business Centre, 2nd floor,Baku, Azerbaijan, AZ 1003E-mail: t.latifov@ktib.ae
-www.ktibholding.com
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-KTIB
-Elmar Sultanovph.\тел. +(994)50.223.3696 Address: 29,Neftchi Gurban Abbasov str.Sapphire Plaza Business Centre, 2nd floor,Baku, Azerbaijan, AZ 1003E-mail: t.latifov@ktib.ae
+Elmar Sultanov
+ph.\тел. +(994)50.223.3696
+Address: 29,Neftchi Gurban Abbasov str.
+Sapphire Plaza Business Centre, 2nd floor,
+Baku, Azerbaijan, AZ 1003
+E-mail:
+t.latifov@ktib.ae
 www.ktibholding.com
 Kazakhstan
 KTIB
-Elmar SultanovKTIB Kazakhstan, 3rd floor,Rahat Palace Business Centre,050040 / A15P4Y9, 29/6 Satpaev str., Almaty, KazakhstanTel: +7 777 330 0267E-mail: t.latifov@ktib.ae
+Elmar Sultanov
+KTIB Kazakhstan, 3rd floor,
+Rahat Palace Business Centre,
+050040 / A15P4Y9, 29/6 Satpaev str., Almaty, Kazakhstan
+Tel: +7 777 330 0267
+E-mail:
+t.latifov@ktib.ae
+www.ktibholding.com
+Nigeria
 
 --- CHUNK FROM https://lmkr.com/contact/ ---
-Kazakhstan
-KTIB
-Elmar SultanovKTIB Kazakhstan, 3rd floor,Rahat Palace Business Centre,050040 / A15P4Y9, 29/6 Satpaev str., Almaty, KazakhstanTel: +7 777 330 0267E-mail: t.latifov@ktib.ae
+KTIB Kazakhstan, 3rd floor,
+Rahat Palace Business Centre,
+050040 / A15P4Y9, 29/6 Satpaev str., Almaty, Kazakhstan
+Tel: +7 777 330 0267
+E-mail:
+t.latifov@ktib.ae
 www.ktibholding.com
 Nigeria
 Reighshore Energy Services Limited
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-www.ktibholding.com
-Nigeria
-Reighshore Energy Services Limited
-89 B6 Street, NICON Town Estate, Lekki, Lagos, NigeriaPhone: +971.4.3727.900Fax: +971.4.3586.386Support: ggxsupport@reighshore.comFemi AdepojuPhone: +234.8.16.655.5497+1.403.475.0994Email: olufemi.adepoju@reighshore.com
+89 B6 Street, NICON Town Estate, Lekki, Lagos, Nigeria
+Phone: +971.4.3727.900
+Fax: +971.4.3586.386
+Support:
+ggxsupport@reighshore.com
+Femi Adepoju
+Phone: +234.8.16.655.5497
++1.403.475.0994
+Email:
+olufemi.adepoju@reighshore.com
 Libya
 Optimal Solution & Consulting Services Company Hay-Alndalus, Tripoli, Libya
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-Libya
-Optimal Solution & Consulting Services Company Hay-Alndalus, Tripoli, Libya
-Mr. Fathi SaadiPhone: +218-91-220 3652fathi.saadi@optscs.com
+Mr. Fathi Saadi
+Phone: +218-91-220 3652
+fathi.saadi@optscs.com
 Southwest Asian Countries
 Pakistan
 Geophysical & Data Management Technology Center
+LMK Resources Pakistan (Private) Limited
+9th Floor, No 55-C, PTET/Ufone Tower, Jinnah Avenue, Islamabad, Pakistan
 
 --- CHUNK FROM https://lmkr.com/contact/ ---
-Mr. Fathi SaadiPhone: +218-91-220 3652fathi.saadi@optscs.com
 Southwest Asian Countries
 Pakistan
 Geophysical & Data Management Technology Center
-LMK Resources Pakistan (Private) Limited9th Floor, No 55-C, PTET/Ufone Tower, Jinnah Avenue, Islamabad, PakistanPostal Code 44000Phone: +92.51.111.101.101Fax: +92.51.831.7933
-South West AsiaSohail Rashid+92.51.209.7158SWACsales@lmkr.com
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-South West AsiaSohail Rashid+92.51.209.7158SWACsales@lmkr.com
+LMK Resources Pakistan (Private) Limited
+9th Floor, No 55-C, PTET/Ufone Tower, Jinnah Avenue, Islamabad, Pakistan
+Postal Code 44000
+Phone: +92.51.111.101.101
+Fax: +92.51.831.7933
+South West Asia
+Sohail Rashid
++92.51.209.7158
+SWACsales@lmkr.com
 Asia Pacific & Australian Continent
 Malaysia
 LMKR Asia SDN.BHD.Technology Center
-17-11 G-Tower, 199 Jalan Tun Razak, 50400Kuala Lumpur, MalaysiaPhone: +603.2300.8700
-Asia PacificIftikhar Atif Khan+971 55 162 2333apacsales@lmkr.com
+17-11 G-Tower, 199 Jalan Tun Razak, 50400
+Kuala Lumpur, Malaysia
+Phone: +603.2300.8700
+Asia Pacific
+Iftikhar Atif Khan
++971 55 162 2333
+apacsales@lmkr.com
 Mauritius
 LMKR Holdings
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-17-11 G-Tower, 199 Jalan Tun Razak, 50400Kuala Lumpur, MalaysiaPhone: +603.2300.8700
-Asia PacificIftikhar Atif Khan+971 55 162 2333apacsales@lmkr.com
-Mauritius
-LMKR Holdings
-c/o Anex Management Services Ltd.Ebène Tower,52 Cybercity Ebène, MauritiusPhone: +230.467.3003Fax: +230.454.7304
-Gandung Wahyu Pramono+62 21 5010 1340ep-indo@id.epintl.com
+c/o Anex Management Services Ltd.
+Ebène Tower,
+52 Cybercity Ebène, Mauritius
+Phone: +230.467.3003
+Fax: +230.454.7304
+Gandung Wahyu Pramono
++62 21 5010 1340
+ep-indo@id.epintl.com
 China
 GNT INC. BEIJING OFFICE
 
 --- CHUNK FROM https://lmkr.com/contact/ ---
-Gandung Wahyu Pramono+62 21 5010 1340ep-indo@id.epintl.com
+Ebène Tower,
+52 Cybercity Ebène, Mauritius
+Phone: +230.467.3003
+Fax: +230.454.7304
+Gandung Wahyu Pramono
++62 21 5010 1340
+ep-indo@id.epintl.com
 China
 GNT INC. BEIJING OFFICE
-NO.B301,Building C-2, Block C,Northern Territory,Zhongguancun Dongsheng Science Park,66 Xi Xiaokou Road,Haidian District, Beijing,Post Code 100192www.gnt-international.comFrank Zhongchhzhong@bjsgt.com
+NO.B301,Building C-2, Block C,
+Northern Territory,
+Zhongguancun Dongsheng Science Park,
+66 Xi Xiaokou Road,
+Haidian District, Beijing,
+Post Code 100192
+www.gnt-international.com
+Frank Zhong
+chhzhong@bjsgt.com
 Japan
 COSMOS-SHOJI
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-Japan
-COSMOS-SHOJI
-2-11 Kanda Nishikicho, Chiyoda-ku, Tokyo 101-0054 (7th floor, Sanyo Yasuda Bulding)Yuka masaki+81809972665503.3518.6911yuka5n@cosmos-shoji.co.jp
+2-11 Kanda Nishikicho, Chiyoda-ku, Tokyo 101-0054 (7th floor, Sanyo Yasuda Bulding)
+Yuka masaki
++818099726655
+03.3518.6911
+yuka5n@cosmos-shoji.co.jp
 Vietnam
-Trung Doan (Vietnam)Business Development Managertrunghn@esstar.com.vn
+Trung Doan (Vietnam)
+Business Development Manager
+trunghn@esstar.com.vn
 Philippines
 EP Oilfield Services Phils., Inc
 
 --- CHUNK FROM https://lmkr.com/contact/ ---
+Yuka masaki
++818099726655
+03.3518.6911
+yuka5n@cosmos-shoji.co.jp
 Vietnam
-Trung Doan (Vietnam)Business Development Managertrunghn@esstar.com.vn
+Trung Doan (Vietnam)
+Business Development Manager
+trunghn@esstar.com.vn
 Philippines
 EP Oilfield Services Phils., Inc
-Unit 1005 Centerpoint Building, Julia Vargas Ave. cor. Garnet Rd., Ortigas Center Brgy. San Brgy., San Antonio, Pasig City 1605apacsales@lmkr.comhttp://www.epintl.com/Adrian Reyesadrian.reyes@ph.epintl.com+63.922.366.6767+63.927.419.2417
-About Us
+Unit 1005 Centerpoint Building, Julia Vargas Ave. cor. Garnet Rd., Ortigas Center Brgy. San Brgy., San Antonio, Pasig City 1605
+apacsales@lmkr.com
+http://www.epintl.com/
+Adrian Reyes
+adrian.reyes@ph.epintl.com
++63.922.366.6767
++63.927.419.2417
 
---- CHUNK FROM https://lmkr.com/contact/ ---
-About Us
-LMKR’s diverse solution portfolio includes geoscience exploration, intelligent transport, data management, and consulting.
-Know More
-Browse
- Announcement
-Partnership
-Services & Expertise
-Software Grant
-Software Release
+--- CHUNK FROM https://www.gverse.com/about ---
+SOURCE DOCUMENT: https://www.gverse.com/about
+About GVERSE GeoGraphix
++1-855-449-5657
+Home
+> About
+About GVERSE GeoGraphix
+GeoGraphix (fondly referred to as GGX), was founded in Denver, Colorado to build the world's first geoscience software on Windows. GVERSE GeoGraphix is the latest evolution in G&G software that delivers advanced geological and geophysical interpretation at an exceptional price. The latest release of GVERSE GeoGraphix includes revamped geophysics, fast subsurface modeling and a laser-like focus on the core workflows geoscientists use every day.
+GVERSE GeoGraphix is a complete geoscience platform offering leading-edge mapping, geological, geophysical & petrophysical interpretation, structural modeling, well and field planning, and state-of-the-art 3D visualization.
+
+--- CHUNK FROM https://www.gverse.com/about ---
+Key Strengths:
+Tight integration that combines industry-leading technologies supported by a common data and project architecture.
+Scalability that meets everyday workflow requirements of consultants as well as multinational oil companies.
+Flexible licensing that allows you to pay for what you need/use.
+Functionality tailored to both conventional and unconventional workflows.
+Low requirement of IT support in-terms of hardware requirements, installation, and set-up time.
+Cost efficient, at 30% less than comparable offerings, it is the smart solution for today's geoscientist.
+User-based pricing models.
+
+--- CHUNK FROM https://www.gverse.com/about ---
+Cost efficient, at 30% less than comparable offerings, it is the smart solution for today's geoscientist.
+User-based pricing models.
+GVERSE GeoGraphix consists of geoscience and engineering solutions focused on workflow optimization and enhancing the productivity of teams working on diverse geological and geophysical projects. GVERSE GeoGraphix applications give you fast, easy-to-use scalable tools that are interoperable with other known geoscience software suites, creating a truly collaborative ecosystem built around future technology trends leveraging big data, cloud, and deep learning.
+GeoGraphix® - A market leader in G&G Software*
+Significantly enhanced geophysical interpretation
+A market leader in G&G software for unconventional plays
+Value-based and cost-effective
+*Kimberlite report
+
+--- CHUNK FROM https://www.gverse.com/about ---
+Significantly enhanced geophysical interpretation
+A market leader in G&G software for unconventional plays
+Value-based and cost-effective
+*Kimberlite report
+Login Page
+
+--- CHUNK FROM https://www.gverse.com/solutions ---
+SOURCE DOCUMENT: https://www.gverse.com/solutions
++1-855-449-5657
+Home
+> Solutions
 Solutions
-Quick Contact 
-USA
-Houston, Texas 
-+1.281.495.5657
-UAE
-Emaar Business Park, Sheikh Zayed Road
-+971 4 3209565
-MYS
-G-Tower, Kuala Lumpur
-+603.2300.8700
-Contact
-
---- CHUNK FROM https://lmkr.com/contact/ ---
-Software Grant
-Software Release
 Solutions
-Quick Contact 
-USA
-Houston, Texas 
-+1.281.495.5657
-UAE
-Emaar Business Park, Sheikh Zayed Road
-+971 4 3209565
-MYS
-G-Tower, Kuala Lumpur
-+603.2300.8700
-Contact
-Facebook
-YouTube
-Twitter
-LinkedIn
-Instagram
-
---- CHUNK FROM https://www.gverse.com/ ---
-SOURCE DOCUMENT: https://www.gverse.com/
-CONTENT:
-GVERSE GeoGraphix | Potential to Production
- +1-855-449-5657
-Sign up Sign in
- Solutions
-GEOLOGY
-State of the art geological interpretation tools for structure and stratigraphic analysis, mapping and geosteering...Read more
-GEOPHYSICS
-Powerful, 2D and 3D seismic interpretation system for rapid prospect generation...Read more
+Geology
+State of the art geological interpretation tools for structure and stratigraphic analysis, mapping and geosteering...
+Read more
 DATA MANAGEMENT
-
---- CHUNK FROM https://www.gverse.com/ ---
+GVERSE GeoGraphix Data Management solution streamlines how you manage, query, and share well information across your organization....
+Read more
+VALUE ADD SERVICES
+Our Value Added Services offer a suite of solutions—including data migration, system upgrades, project recovery, and performance optimization....
+Read more
 GEOPHYSICS
-Powerful, 2D and 3D seismic interpretation system for rapid prospect generation...Read more
-DATA MANAGEMENT
-GVERSE GeoGraphix Data Management solution streamlines how you manage, query, and share well information across your organization....Read more
+Powerful, 2D and 3D seismic interpretation system for rapid prospect generation...
+Read more
 FIELD DEVELOPMENT
-GVERSE GeoGraphix bridges the gap between subsurface insight and surface execution ....Read more
-VALUE ADD SERVICES
+GVERSE GeoGraphix bridges the gap between subsurface insight and surface execution ....
+Read more
 
---- CHUNK FROM https://www.gverse.com/ ---
+--- CHUNK FROM https://www.gverse.com/solutions ---
+Read more
 FIELD DEVELOPMENT
-GVERSE GeoGraphix bridges the gap between subsurface insight and surface execution ....Read more
-VALUE ADD SERVICES
-Our Value Added Services offer a suite of solutions—including data migration, system upgrades, project recovery, and performance optimization....Read more
- Support
-Downloads
-Download the latest release or previous versions.
-REMOTE SUPPORT CLIENT
-
---- CHUNK FROM https://www.gverse.com/ ---
-Support
-Downloads
-Download the latest release or previous versions.
-REMOTE SUPPORT CLIENT 
-Enable GeoGraphix support analysts to resolve your issues remotely in real-time. 
-Case Management
-Submit a new case and/or monitor the status of your existing cases.
-Knowledge Center
-Search our extensive database of helpful hints, workflows and solutions.
- Events 
- E-Learning
-Webinars
-
---- CHUNK FROM https://www.gverse.com/ ---
-Submit a new case and/or monitor the status of your existing cases.
-Knowledge Center
-Search our extensive database of helpful hints, workflows and solutions.
- Events 
- E-Learning
-Webinars
- Sign up for an upcoming live webinar or view our archive of previous broadcasts, available to view on demand. 
-Certifications
-
---- CHUNK FROM https://www.gverse.com/ ---
-Events 
- E-Learning
-Webinars
- Sign up for an upcoming live webinar or view our archive of previous broadcasts, available to view on demand. 
-Certifications
-Enhance your skills, get certified and stay relevant by enrolling in our certification program. 
-Virtual Trainings
-See our list of free online training classes covering a variety of topics, and sign-up today! 
- Academia 
- Contact 
- About
-
---- CHUNK FROM https://www.gverse.com/ ---
-Virtual Trainings
-See our list of free online training classes covering a variety of topics, and sign-up today! 
- Academia 
- Contact 
- About
-About
-GeoGraphix® - A market leader in G&G Software. 
-News
-Stay up to date with the latest from GVERSE GeoGraphix. 
- Quick Links 
- Account Management
-Invoices
-
---- CHUNK FROM https://www.gverse.com/ ---
-Academia 
- Contact 
- About
-About
-GeoGraphix® - A market leader in G&G Software. 
-News
-Stay up to date with the latest from GVERSE GeoGraphix. 
- Quick Links 
- Account Management
-Invoices
- Manage your pending invoices effortlessly. Simply click to view and conveniently pay outstanding invoices with just one click using the "Pay Now" button. 
-License Management
-
---- CHUNK FROM https://www.gverse.com/ ---
-Invoices
- Manage your pending invoices effortlessly. Simply click to view and conveniently pay outstanding invoices with just one click using the "Pay Now" button. 
-License Management
-Request for a new license, transfer an existing license to another computer or upgrade your existing license. 
-Sign up
- Sign in
- +1-855-449-5657
-Find a Solution
-Get Started
-Explore Knowledge Base
-Get Help
-
---- CHUNK FROM https://www.gverse.com/ ---
-Sign up
- Sign in
- +1-855-449-5657
-Find a Solution
-Get Started
-Explore Knowledge Base
-Get Help 
-Latest Release
-GVERSE GeoGraphix Release 2026.1
- Download Now 
-Spotlight
-New Release
-GVERSE GeoGraphix Release 2026.1
-News
-e-Learning
-Webinars
-Virtual Training
-Events
-Industry Events
-User Groups
- Knowledge Center
- Search our extensive database of helpful hints, workarounds, and solutions.
-Datasheets
-
---- CHUNK FROM https://www.gverse.com/ ---
-News
-e-Learning
-Webinars
-Virtual Training
-Events
-Industry Events
-User Groups
- Knowledge Center
- Search our extensive database of helpful hints, workarounds, and solutions.
-Datasheets
-View All
-Tips and Tricks
-View All
-Whitepapers
-View All
-Recent Webinars
-What’s new in GVERSE GeoGraphix 2023.2 [56:02] 
- Jun 27, 2024 [English]
-
---- CHUNK FROM https://www.gverse.com/ ---
-Datasheets
-View All
-Tips and Tricks
-View All
-Whitepapers
-View All
-Recent Webinars
-What’s new in GVERSE GeoGraphix 2023.2 [56:02] 
- Jun 27, 2024 [English]
-Desvelando el Subsuelo: Identificación, Delimitación y Extracción Automática de un Domo Salino en el [60] [Spanish]
- March 13, 2024
-Best practices for AOI's and Project Maintenance (Extents and Database) [60] [English]
- March 6, 2024
-
---- CHUNK FROM https://www.gverse.com/ ---
-March 13, 2024
-Best practices for AOI's and Project Maintenance (Extents and Database) [60] [English]
- March 6, 2024
-Geo+ Calculate well in zone [60]
- January 31, 2024
-Don't take our word for it. See why our customers choose us with confidence!
- We take immense pride in our work and feel honored to share all the positive feedback we have received.
-
---- CHUNK FROM https://www.gverse.com/ ---
-We take immense pride in our work and feel honored to share all the positive feedback we have received. 
-Support was very diligent in getting us up and running.  It wasn't a GeoGraphix issue, but an OS/DNS issue with the workstation and server.  Once that was determined, and then resolved, we were up and running quickly.  Appreciate the efforts..
- Aspen Integrated Oil and Gas LP
-
---- CHUNK FROM https://www.gverse.com/ ---
-Aspen Integrated Oil and Gas LP
-Support was very helpful in resolving the Windows Registry issue I was having.  Even at 7am EST.  Thanks again.
- Carpenter Energy
-I really appreciate the help I have received from GeoGraphix. They were able to help me much better than the day to day IT group we use. Thanks so much.
- Ventana Exploration & Production LLC
-
---- CHUNK FROM https://www.gverse.com/ ---
-Ventana Exploration & Production LLC
-I have used GeoGraphix support many times and the support personnel have always been knowledgeable, courteous and efficient. The GeoGraphix software package is multifaceted and is very powerful. The availability of quality support has lent to optimizing its application. 
-Anthony Skeryanc
- Quick Links 
- Solutions
- Product Demos
- Datasheets
- Webinars
-
---- CHUNK FROM https://www.gverse.com/ ---
-Anthony Skeryanc
- Quick Links 
- Solutions
- Product Demos
- Datasheets
- Webinars
- Virtual Training
- Downloads
- Knowledge Center
-Case Management
- Contact
-Talk to an Expert
-Can’t find what you are looking for?
- Social Media 
-Technology Partnerships 
-Where geoscientists and engineers work together to invent, design, and develop innovative products and technologies 
-Solutions 
- Geology
-Geophysics
-
---- CHUNK FROM https://www.gverse.com/ ---
-Social Media 
-Technology Partnerships 
-Where geoscientists and engineers work together to invent, design, and develop innovative products and technologies 
-Solutions 
- Geology
-Geophysics
+GVERSE GeoGraphix bridges the gap between subsurface insight and surface execution ....
+Read more
+Products
+Geology
+GVERSE Geo+
+GeoAtlas
+GVERSE Petrophysics
+GVERSE XSection
+GEOPHYSICS
+GVERSE Geophysics
+GVERSE Attributes
+LogM
 Data Management
+WellBase
+QueryBuilder
+ZoneManager
+DepthRegisteration
+Xchange Toolbox
+GVERSE Connect
 Field Development
- Value Added Services
-Support 
-License Management 
-Downloads 
-Case Management 
-Knowledge Center 
-Remote Support Client 
-Training 
-Virtual Training 
-Events 
-Upcoming events
-
---- CHUNK FROM https://www.gverse.com/ ---
-Field Development
- Value Added Services
-Support 
-License Management 
-Downloads 
-Case Management 
-Knowledge Center 
-Remote Support Client 
-Training 
-Virtual Training 
-Events 
-Upcoming events 
-User Group Meetings 
-Upcoming webinars 
- Academia 
-University Grant Program 
-Software for Students 
- About 
-News 
-Product Demos 
-Datasheets 
- Contact 
- Resellers 
+GVERSE Planner
+GVERSE FieldPlanner
 Login Page
-Welcome!
 
---- CHUNK FROM https://www.gverse.com/ ---
-Upcoming events 
-User Group Meetings 
-Upcoming webinars 
- Academia 
-University Grant Program 
-Software for Students 
- About 
-News 
-Product Demos 
-Datasheets 
- Contact 
- Resellers 
-Login Page
-Welcome!
-Sign in to your account to Proceed
-Keep me signed in
-Forgot password?
-Login
- Don't have an account yet? Create an account
+--- CHUNK FROM https://www.gverse.com/solutions/geology-solutions ---
+SOURCE DOCUMENT: https://www.gverse.com/solutions/geology-solutions
+Loading…
+Please select a package.
+Loading…
+Loading…
 
---- CHUNK FROM https://www.trverse.com/ ---
-SOURCE DOCUMENT: https://www.trverse.com/
-CONTENT:
+--- CHUNK FROM https://www.gverse.com/solutions/data-management-solutions ---
+SOURCE DOCUMENT: https://www.gverse.com/solutions/data-management-solutions
+Loading…
+Please select a package.
+Loading…
+Loading…
+
+--- CHUNK FROM https://www.gverse.com/solutions/value-added-geoscience-services ---
+SOURCE DOCUMENT: https://www.gverse.com/solutions/value-added-geoscience-services
+Loading…
+Please select a package.
+Loading…
+Loading…
+
+--- CHUNK FROM https://www.gverse.com/solutions/geophysics-solutions ---
+SOURCE DOCUMENT: https://www.gverse.com/solutions/geophysics-solutions
+Loading…
+Please select a package.
+Loading…
+Loading…
+
+--- CHUNK FROM https://www.gverse.com/solutions/field-development-solutions ---
+SOURCE DOCUMENT: https://www.gverse.com/solutions/field-development-solutions
+Loading…
+Please select a package.
+Loading…
+Loading…
+
+--- CHUNK FROM https://trverse.com/ ---
+SOURCE DOCUMENT: https://trverse.com/
 Trverse | Smart Mobility Solutions
-Search for:
-About Us Who We AreOur MissionOur VisionOur Expertise Transport ManagementInformation Management SystemIntegrated SecurityOur Solutions Automated Fare CollectionIntelligent Transport SystemSignal Priority SystemClient StoriesMedia RoomContact Us 
-Trverse Home V2lmktcom2023-02-01T05:25:56+00:00
 
---- CHUNK FROM https://www.trverse.com/ ---
-Trverse Home V2lmktcom2023-02-01T05:25:56+00:00 
-Global 
- Discover More 
-Award - Winning
-Read More 
- Software 
-Mobility Solutions
-that move you 
-forward 
- Learn more about how our mobility solutions are
-revolutionizing the transport sector. 
- Discover More 
-Global 
- Discover More 
- Award - Winning
-Software 
-Read More 
-Mobility Solutions that
-move you forward
+--- CHUNK FROM https://trverse.com/who-we-are/ ---
+SOURCE DOCUMENT: https://trverse.com/who-we-are/
+Who We Are - Providing Mobility Solutions To Transform Lives
 
---- CHUNK FROM https://www.trverse.com/ ---
-revolutionizing the transport sector. 
- Discover More 
-Global 
- Discover More 
- Award - Winning
-Software 
-Read More 
-Mobility Solutions that
-move you forward 
- Learn more about how our mobility solutions are revolutionizing the transport sector. 
- Discover More 
-We cater to all aspects of a comprehensive
-smarter urbanization solution
+--- CHUNK FROM https://trverse.com/our-mission/ ---
+SOURCE DOCUMENT: https://trverse.com/our-mission/
+Our Mission - Providing Mobility Solutions To Transform Lives
 
---- CHUNK FROM https://www.trverse.com/ ---
-move you forward 
- Learn more about how our mobility solutions are revolutionizing the transport sector. 
- Discover More 
-We cater to all aspects of a comprehensive
-smarter urbanization solution
-Our ProjectsOur ProjectsHelping our clients shape an intelligent transport system in Pakistan
-View All
-Peshawar
-BRT
-Lahore
-Metro
-Multan
-Metro
+--- CHUNK FROM https://trverse.com/our-vision/ ---
+SOURCE DOCUMENT: https://trverse.com/our-vision/
+Our Vision - Providing Mobility Solutions To Transform Lives
 
---- CHUNK FROM https://www.trverse.com/ ---
-smarter urbanization solution
-Our ProjectsOur ProjectsHelping our clients shape an intelligent transport system in Pakistan
-View All
-Peshawar
-BRT
-Lahore
-Metro
-Multan
-Metro
-Our SolutionsOur affordable systems aim to ease the movement of passengers and freight.
-View All
-Automated
-Fare Collection
-Intelligent
-Transport
-Signal Priority
-System
+--- CHUNK FROM https://trverse.com/transport-management/ ---
+SOURCE DOCUMENT: https://trverse.com/transport-management/
+Transport Management - Providing Mobility Solutions To Transform Lives
 
---- CHUNK FROM https://www.trverse.com/ ---
-BRT
-Lahore
-Metro
-Multan
-Metro
-Our SolutionsOur affordable systems aim to ease the movement of passengers and freight.
-View All
-Automated
-Fare Collection
-Intelligent
-Transport
-Signal Priority
-System
-Our SolutionsContact UsPlease provide your information to get connected with us
-Social Media
- Follow our social media for latest product updates
-Our Expertise
-Transport Management
-Integrated Security
+--- CHUNK FROM https://trverse.com/information-system/ ---
+SOURCE DOCUMENT: https://trverse.com/information-system/
+Information Management System - Providing Mobility Solutions To Transform Lives
 
---- CHUNK FROM https://www.trverse.com/ ---
-Social Media
- Follow our social media for latest product updates
-Our Expertise
-Transport Management
-Integrated Security
-Information System
-Our Solutions
-Automated Fare Collection
-Intelligent Transport System
-Signal Priority System
-Contact Us
-Our Mission
-Our Vision
-About Us
-©2025
-Page load link
+--- CHUNK FROM https://trverse.com/integrated-security/ ---
+SOURCE DOCUMENT: https://trverse.com/integrated-security/
+Integrated Security - Providing Mobility Solutions To Transform Lives
+
+--- CHUNK FROM https://trverse.com/automated-fare-collection/ ---
+SOURCE DOCUMENT: https://trverse.com/automated-fare-collection/
+Automated Fare Collection - Providing Mobility Solutions To Transform Lives
+
+--- CHUNK FROM https://trverse.com/intelligent-transport-system/ ---
+SOURCE DOCUMENT: https://trverse.com/intelligent-transport-system/
+Intelligent Transport System - Providing Mobility Solutions To Transform Lives
+
+--- CHUNK FROM https://trverse.com/signal-priority-system/ ---
+SOURCE DOCUMENT: https://trverse.com/signal-priority-system/
+Signal Priority System - Providing Mobility Solutions To Transform Lives
 

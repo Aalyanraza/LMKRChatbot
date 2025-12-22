@@ -3,12 +3,14 @@ import re
 import requests
 from typing import List
 from bs4 import BeautifulSoup
+import faiss
 
 # LangChain Imports
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
+from langchain_community.docstore.in_memory import InMemoryDocstore
 
 # ==========================================
 # CONFIGURATION
@@ -189,7 +191,8 @@ def scrape_urls(urls: List[str]) -> List[Document]:
 # 2. EMBEDDING MODULE
 # ==========================================
 def generate_vector_db(docs: List[Document]):
-    if not docs: return
+    if not docs: 
+        return
 
     print(f"\n💎 Loading Embedding Model: {EMBEDDING_MODEL_NAME}...")
     embeddings = HuggingFaceEmbeddings(
@@ -207,19 +210,44 @@ def generate_vector_db(docs: List[Document]):
     
     split_docs = splitter.split_documents(docs)
     
-    print("💾 Building FAISS Index...")
-    vector_db = FAISS.from_documents(split_docs, embeddings)
+    # 1. Embed the documents for training
+    print(f"🧠 Embedding {len(split_docs)} chunks for training...")
+    doc_texts = [d.page_content for d in split_docs]
+    # Convert embeddings to a numpy array for FAISS
+    import numpy as np
+    vectors = np.array(embeddings.embed_documents(doc_texts)).astype('float32')
     
+    # 2. Setup the Quantized Index
+    dimension = 768 
+    index = faiss.index_factory(dimension, "SQ8") 
+    
+    # 3. NEW: Train the index
+    print("🎓 Training Quantized Index...")
+    index.train(vectors)
+    
+    print("💾 Building Quantized FAISS Index...")
+    # 4. Initialize FAISS and add documents
+    vector_db = FAISS(
+        embedding_function=embeddings,
+        index=index,
+        docstore=InMemoryDocstore({}),
+        index_to_docstore_id={}
+    )
+    
+    vector_db.add_documents(split_docs)
+    
+    # 5. Save
     if not os.path.exists(VECTOR_DB_DIR): os.makedirs(VECTOR_DB_DIR)
     vector_db.save_local(VECTOR_DB_PATH)
     
+    # Optional: Log chunks to text file as in your original implementation
     with open(DATA_PATH, 'w', encoding='utf-8') as f:
         for d in split_docs:
             f.write(f"--- CHUNK FROM {d.metadata['source']} ---\n")
             f.write(d.page_content)
             f.write("\n\n")
-    print(f"✅ Done. Check {DATA_FILE}")
-
+            
+    print(f"✅ Done. Quantized database saved to {VECTOR_DB_PATH}")
 if __name__ == "__main__":
     import urllib3
     urllib3.disable_warnings()
