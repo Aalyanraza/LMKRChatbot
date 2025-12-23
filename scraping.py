@@ -4,13 +4,16 @@ import requests
 from typing import List
 from bs4 import BeautifulSoup
 import faiss
+import numpy as np
 
 # LangChain Imports
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_openai import OpenAIEmbeddings # Changed
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_community.docstore.in_memory import InMemoryDocstore
+import config
+
 
 # ==========================================
 # CONFIGURATION
@@ -23,7 +26,7 @@ VECTOR_DB_DIR = "./vector_db"
 VECTOR_DB_NAME = "faiss_lmkr"
 VECTOR_DB_PATH = os.path.join(VECTOR_DB_DIR, VECTOR_DB_NAME)
 
-EMBEDDING_MODEL_NAME = "sentence-transformers/all-mpnet-base-v2"
+EMBEDDING_MODEL_NAME = config.EMBEDDINGS_MODEL
 CHUNK_SIZE = 800
 CHUNK_OVERLAP = 200
 
@@ -194,14 +197,14 @@ def generate_vector_db(docs: List[Document]):
     if not docs: 
         return
 
-    print(f"\n💎 Loading Embedding Model: {EMBEDDING_MODEL_NAME}...")
-    embeddings = HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL_NAME,
-        model_kwargs={'device': 'cpu'}, 
-        encode_kwargs={'normalize_embeddings': True}
+    print(f"\n💎 Initializing OpenAI Embeddings: {EMBEDDING_MODEL_NAME}...")
+    # Switched to OpenAIEmbeddings
+    embeddings = OpenAIEmbeddings(
+        model=EMBEDDING_MODEL_NAME,
+        openai_api_key=config.OPENAI_API_KEY
     )
     
-    print(f"✂️  Splitting text...")
+    print(f"✂️  Splitting text into {CHUNK_SIZE} char chunks...")
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
@@ -210,23 +213,20 @@ def generate_vector_db(docs: List[Document]):
     
     split_docs = splitter.split_documents(docs)
     
-    # 1. Embed the documents for training
-    print(f"🧠 Embedding {len(split_docs)} chunks for training...")
+    # 1. Embed the documents
+    print(f"🧠 Embedding {len(split_docs)} chunks...")
     doc_texts = [d.page_content for d in split_docs]
-    # Convert embeddings to a numpy array for FAISS
-    import numpy as np
     vectors = np.array(embeddings.embed_documents(doc_texts)).astype('float32')
     
     # 2. Setup the Quantized Index
-    dimension = 768 
+    # IMPORTANT: Dimension must be 1536 for OpenAI 3-small
+    dimension = 1536 
     index = faiss.index_factory(dimension, "SQ8") 
     
-    # 3. NEW: Train the index
-    print("🎓 Training Quantized Index...")
+    # 3. Train and Build
+    print("🎓 Training and Building Quantized FAISS Index...")
     index.train(vectors)
     
-    print("💾 Building Quantized FAISS Index...")
-    # 4. Initialize FAISS and add documents
     vector_db = FAISS(
         embedding_function=embeddings,
         index=index,
@@ -237,17 +237,12 @@ def generate_vector_db(docs: List[Document]):
     vector_db.add_documents(split_docs)
     
     # 5. Save
-    if not os.path.exists(VECTOR_DB_DIR): os.makedirs(VECTOR_DB_DIR)
-    vector_db.save_local(VECTOR_DB_PATH)
-    
-    # Optional: Log chunks to text file as in your original implementation
-    with open(DATA_PATH, 'w', encoding='utf-8') as f:
-        for d in split_docs:
-            f.write(f"--- CHUNK FROM {d.metadata['source']} ---\n")
-            f.write(d.page_content)
-            f.write("\n\n")
-            
-    print(f"✅ Done. Quantized database saved to {VECTOR_DB_PATH}")
+    if not os.path.exists(config.VECTOR_DB_DIR): os.makedirs(config.VECTOR_DB_DIR)
+    vector_db.save_local(config.VECTOR_DB_PATH)
+    print(f"✅ OpenAI FAISS database saved to {config.VECTOR_DB_PATH}")
+
+
+
 if __name__ == "__main__":
     import urllib3
     urllib3.disable_warnings()

@@ -13,12 +13,14 @@ beautifulsoup4
 requests
 selenium
 python-dotenv
+langchain-openai
+openai
 
 # --- Guardrails AI & Validators ---
 guardrails-ai
 # Underlying packages for hub://guardrails/detect_pii and detect_prompt_injection
 guardrails-grhub-detect-pii
-guardrails-grhub-detect-prompt-injection
+guardrails
 
 # --- Validator Dependencies ---
 presidio-analyzer

@@ -34,7 +34,8 @@ def detect_malicious_prompt(question: str) -> bool:
         return True
     
     # Layer 2: Semantic Similarity Check
-    query_vector = np.array([embeddings.embed_query(question)]).astype('float32')
+    raw_embedding = embeddings.embed_query(question)
+    query_vector = np.array([raw_embedding]).astype('float32')
     faiss.normalize_L2(query_vector)
     
     distances, indices = malicious_index.search(query_vector, k=1)

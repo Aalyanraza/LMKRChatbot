@@ -6,12 +6,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- API & Model Configuration ---
-HF_API_TOKEN = os.getenv("HF_API_TOKEN")
-HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.2"
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") 
+LLM_MODEL = "gpt-4o-mini"
 
 # --- Vector DB Configuration ---
+VECTOR_DB_DIR = "./vector_db"
 VECTOR_DB_PATH = "./vector_db/faiss_lmkr"
-EMBEDDINGS_MODEL = "sentence-transformers/all-mpnet-base-v2"
+EMBEDDINGS_MODEL = "text-embedding-3-small"
+# IMPORTANT: OpenAI 3-small is 1536 dimensions
+EMBEDDING_DIMENSION = 1536  # Changed from 768
 EMBEDDINGS_DEVICE = "cpu"
 
 # --- Retrieval Configuration ---
@@ -23,8 +26,8 @@ RETRY_K_INCREMENT_CAREER = 4
 RETRY_K_INCREMENT_NEWS = 4
 
 # --- Text Processing ---
-CHUNK_SIZE = 500
-CHUNK_OVERLAP = 50
+CHUNK_SIZE = 800
+CHUNK_OVERLAP = 200
 
 # --- LLM Parameters ---
 LLM_MAX_TOKENS = 500
@@ -32,7 +35,7 @@ LLM_TEMPERATURE = 0.1
 
 # --- Security & Validation ---
 MAX_RETRIES = 2
-MALICIOUS_SIMILARITY_THRESHOLD = 0.82
+MALICIOUS_SIMILARITY_THRESHOLD = 0.75
 
 # --- Scraping Configuration ---
 CAREERS_URL = "https://lmkr.bamboohr.com/careers"
@@ -80,9 +83,6 @@ API_TITLE = "LMKR Chatbot API"
 
 # --- Cleanup Tags (for scraping) ---
 CLEANUP_TAGS = ["nav", "footer", "script", "style", "noscript", "svg", "header"]
-
-# --- Embedding Dimension ---
-EMBEDDING_DIMENSION = 768  # For all-mpnet-base-v2
 
 # --- Selenium Configuration ---
 SELENIUM_HEADLESS = True
