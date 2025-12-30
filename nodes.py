@@ -5,7 +5,7 @@ import faiss
 from langchain_community.vectorstores import FAISS
 from models import (
     QueryAugmentation, GeneratedAnswer, ValidationResult, 
-    RouteDecision, AgentState
+    RouteDecision, AgentState, ProceduralRule
 )
 from llm_helpers import query_llm_structured
 from guards import detect_malicious_prompt, apply_input_guard, apply_output_guard
@@ -35,9 +35,14 @@ def input_guard_node(state: AgentState):
 def router_node(state: AgentState):
     print("\n🚦 Router: Analyzing User Intent...")
     question = state["question"]
+    namespace = ("instructions", "global")
+    stored_lessons = memory_store.search(namespace, limit=5)
+    lessons_text = "\n".join([m.value["rule"] for m in stored_lessons])
     
     prompt = f"""
     User Question: {question}
+    Existing Procedural Lessons:
+    {lessons_text}
     Role: You are a Router. 
     Task: Decide where to send this query.
     
@@ -215,4 +220,30 @@ def save_memory_node(state: AgentState):
             key=str(datetime.now().timestamp()), # Unique key per turn
             value={"q": state["question"], "a": state["generated_answer"].answer}
         )
+    return state
+
+# --- Node 11: REFLECTION ---
+def reflection_node(state: AgentState):
+    """
+    Analyzes the conversation to extract 'procedural lessons'.
+    Only runs if a retry was needed and then succeeded.
+    """
+    if state["retry_count"] > 0 and state["validation"].is_valid:
+        print("🧠 Node: Procedural Reflection (Learning from retries)...")
+        
+        # Analyze why the first attempt failed and how it was fixed
+        prompt = f"""
+        User Question: {state['question']}
+        Route Taken: {state['destination']}
+        Failure Reason: {state['validation'].reason}
+        
+        Task: Create a concise 'Instruction' for the bot to avoid this mistake next time.
+        Example: 'Queries about GVERSE should be routed to retrieve_node, not news_retrieve_node.'
+        """
+        
+        # We use a simple string output for the instruction
+        instruction_obj = query_llm_structured(prompt, ProceduralRule)
+        if instruction_obj:
+            namespace = ("instructions", "global") 
+            memory_store.put(namespace, key=f"rule_{datetime.now().timestamp()}", value={"rule": instruction_obj.rule})        
     return state

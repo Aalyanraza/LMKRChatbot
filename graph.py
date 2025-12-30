@@ -12,7 +12,8 @@ from nodes import (
     generate_node,
     output_guard_node,
     validate_node,
-    save_memory_node
+    save_memory_node,
+    reflection_node
 )
 
 # --- Edge Routing Logic ---
@@ -62,6 +63,7 @@ workflow.add_node("generate_node", generate_node)
 workflow.add_node("output_guard_node", output_guard_node)
 workflow.add_node("validate_node", validate_node)
 workflow.add_node("save_memory_node", save_memory_node)
+workflow.add_node("reflection_node", reflection_node)
 
 # Set entry point
 workflow.set_entry_point("input_guard_node")
@@ -108,16 +110,17 @@ workflow.add_conditional_edges(
 
 # Conversational Node -> END
 workflow.add_edge("conversational_node", END)
+workflow.add_edge("save_memory_node", "reflection_node")
+workflow.add_edge("reflection_node", END)
 
-workflow.add_edge("save_memory_node", END)
 
 # Compile the graph
 app = workflow.compile()
 
 # visulization (optional)
-# graph_repr = app.get_graph() 
-# png_bytes = graph_repr.draw_mermaid_png() 
-# with open("workflow_graph.png", "wb") as f:
-#     f.write(png_bytes)
+graph_repr = app.get_graph() 
+png_bytes = graph_repr.draw_mermaid_png() 
+with open("workflow_graph.png", "wb") as f:
+    f.write(png_bytes)
 
 print("✅ Graph compiled successfully!")

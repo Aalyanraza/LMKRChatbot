@@ -47,8 +47,11 @@ class RouteDecision(BaseModel):
         description="Choose 'news_retrieve_node' for announcements, press releases, or latest news about LMKR. Choose 'career_retrieve_node' for jobs/vacancies. Choose 'conversational_node' for chat. Choose 'retrieve_node' for everything else."
     )
 
-# --- Agent State Definition ---
+class ProceduralRule(BaseModel):
+    rule: str = Field(description="A concise instruction to improve future agent behavior.")
 
+
+# --- Agent State Definition ---
 class AgentState(TypedDict):
     """State object passed through the LangGraph workflow"""
     question: str
@@ -60,7 +63,6 @@ class AgentState(TypedDict):
     destination: str
 
 # --- FastAPI Models ---
-
 class ChatRequest(BaseModel):
     """Request model for chat endpoint"""
     question: str
