@@ -39,10 +39,13 @@ async def chat_endpoint(request: ChatRequest):
         # Initialize the state
         initial_state = {
             "question": request.question,
+            "thread_id": request.user_id,
+            "user_id": request.user_id,
             "retry_count": 0,
             "context_chunks": [],
             "generated_answer": None,
-            "validation": None
+            "validation": None,
+            "destination": "retrieve_node"
         }
         
         # Run the graph
@@ -84,5 +87,6 @@ if __name__ == "__main__":
     uvicorn.run(
         api,
         host=config.API_HOST,
-        port=config.API_PORT
+        port=config.API_PORT,
+        log_level="error" # Change from default 'info' to 'error'
     )

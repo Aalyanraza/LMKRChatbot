@@ -6,6 +6,10 @@ from guardrails import Guard, OnFailAction
 from guardrails.hub import DetectPII, ToxicLanguage, CompetitorCheck
 import config
 from embeddings_setup import embeddings, malicious_index
+import warnings
+
+# Suppress the specific Guardrails event loop warning
+warnings.filterwarnings("ignore", message="Could not obtain an event loop")
 
 # Setup Input Guard
 input_guard = Guard().use_many(

@@ -4,16 +4,23 @@ import numpy as np
 import faiss
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
+from langgraph.store.memory import InMemoryStore
 from openai import OpenAI
 import config
 
 # 1. Initialize OpenAI Embeddings 
-# This replaces HuggingFaceEmbeddings
 embeddings = OpenAIEmbeddings(
     model=config.EMBEDDINGS_MODEL, # "text-embedding-3-small"
     openai_api_key=config.OPENAI_API_KEY
 )
 
+# Initialize In-Memory Store for FAISS
+memory_store = InMemoryStore(
+    index={
+        "dims": 1536, 
+        "embed": "openai:text-embedding-3-small"
+    }
+)
 # 2. Initialize Vector Store
 # Note: You MUST delete your old FAISS folder and re-index. 
 # 768-dim vectors will crash with OpenAI's 1536-dim embeddings.

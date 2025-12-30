@@ -10,8 +10,8 @@ from models import (
 from llm_helpers import query_llm_structured
 from guards import detect_malicious_prompt, apply_input_guard, apply_output_guard
 from tools import scrape_careers_tool, scrape_news_fast_tool
-from utils import split_text_into_chunks, load_from_file, save_to_file
-from embeddings_setup import vectorstore, embeddings
+from utils import split_text_into_chunks, load_from_file, save_to_file, is_file_fresh
+from embeddings_setup import vectorstore, embeddings, memory_store
 import config
 from datetime import datetime
 
@@ -90,11 +90,12 @@ def career_retrieve_node(state: AgentState):
     dynamic_k = config.BASE_K_CAREER + (current_retry * config.RETRY_K_INCREMENT_CAREER)
     
     # Adaptive Caching Logic
-    raw_text = ""
-    if current_retry > 0 and os.path.exists(config.CAREERS_OUTPUT_FILE):
-        print(f"   🔄 Retry #{current_retry}: Reading cached career data...")
+    if is_file_fresh(config.CAREERS_OUTPUT_FILE, config.SCRAPE_CACHE_HOURS):
+        print(f"   ✅ Using fresh cached career data ( < {config.SCRAPE_CACHE_HOURS}h old).")
         raw_text = load_from_file(config.CAREERS_OUTPUT_FILE)
     else:
+        # 2. Re-scrape if file is old or missing
+        print("   ⚠️ Cache expired or missing. Re-scraping live data...")
         raw_text = scrape_careers_tool.invoke({})
 
     if not raw_text: return {"context_chunks": []}
@@ -144,8 +145,18 @@ def generate_node(state: AgentState):
     print("\n✍️ Node: Generate (Unified)...")
     context_data = "\n---\n".join(state["context_chunks"])
     today = datetime.now().strftime("%B %d, %Y") # e.g., December 23, 2025
+
+    namespace = ("memories", state["thread_id"], "episodes")
+    past_episodes = memory_store.search(namespace, query=state["question"], limit=2)
+    
+    # Format episodes as context
+    formatted_history = "\n".join([f"Past Question: {m.value['q']}\nPast Answer: {m.value['a']}" for m in past_episodes])
     
     prompt = f"""
+    You are an expert assistant for LMKR, a global technology and software company. Use the provided Context Data to answer the user's question accurately.
+    Past Conversations:
+    {formatted_history}
+
     Context Data:
     {context_data}
     
@@ -155,17 +166,19 @@ def generate_node(state: AgentState):
     Instructions:
     1. Answer using ONLY the Context Data.
     2. The Context contains real dates up to {today}. Report them exactly as written.
-    3. If the context mentions an event on 'December 10, 2025', it is a valid past event relative to today.
-    4. If information is missing, state "I do not have enough information."
+    3. Use 'Past Experiences' to maintain consistency in tone or to handle follow-up pronouns.
+    4. Answer using 'New Context' only.
+    5. Any date in the context that is equal to or prior to {today} should be treated as a factual past event
+    6. If information is missing, state "I do not have enough information."
     """
     response = query_llm_structured(prompt, GeneratedAnswer)
-    
+    print("   Generated Answer: ", response.answer if response else "No response.")
+
     # Safety Check for length-limit failures
     if response is None:
         return {"generated_answer": GeneratedAnswer(answer="I hit a processing limit. Please try a more specific question.", sources_used=["Error"])}
         
     return {"generated_answer": response, "retry_count": state.get("retry_count", 0) + 1}
-
 
 # --- Node 8: OUTPUT GUARD ---
 def output_guard_node(state: AgentState):
@@ -192,3 +205,14 @@ def validate_node(state: AgentState):
     """
     validation = query_llm_structured(prompt, ValidationResult)
     return {"validation": validation or ValidationResult(is_valid=False, reason="Validation failed.")}
+
+# --- Node 10: MEMORY STORE UPDATE ---
+def save_memory_node(state: AgentState):
+    if state["validation"] and state["validation"].is_valid:
+        namespace = ("memories", state["thread_id"], "episodes")
+        memory_store.put(
+            namespace, 
+            key=str(datetime.now().timestamp()), # Unique key per turn
+            value={"q": state["question"], "a": state["generated_answer"].answer}
+        )
+    return state

@@ -42,6 +42,7 @@ CAREERS_URL = "https://lmkr.bamboohr.com/careers"
 NEWS_URL = "https://lmkr.com/announcements"
 SCRAPE_TIMEOUT = 10
 SELENIUM_WAIT_TIME = 5
+SCRAPE_CACHE_HOURS = 6
 
 # --- Output Files ---
 CAREERS_OUTPUT_FILE = "live_careers_data.txt"

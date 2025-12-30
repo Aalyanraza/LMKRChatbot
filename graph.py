@@ -11,7 +11,8 @@ from nodes import (
     conversational_node,
     generate_node,
     output_guard_node,
-    validate_node
+    validate_node,
+    save_memory_node
 )
 
 # --- Edge Routing Logic ---
@@ -27,8 +28,7 @@ def validation_router(state: AgentState):
     
     # 1. Success
     if validation and validation.is_valid:
-        print("✅ Validation Passed.")
-        return END
+        return "save_memory_node"
     
     # 2. Max Retries
     if retry_count >= 2:
@@ -61,6 +61,7 @@ workflow.add_node("conversational_node", conversational_node)
 workflow.add_node("generate_node", generate_node)
 workflow.add_node("output_guard_node", output_guard_node)
 workflow.add_node("validate_node", validate_node)
+workflow.add_node("save_memory_node", save_memory_node)
 
 # Set entry point
 workflow.set_entry_point("input_guard_node")
@@ -96,6 +97,7 @@ workflow.add_conditional_edges(
     "validate_node",
     validation_router,
     {
+        "save_memory_node": "save_memory_node",  # ADD THIS LINE
         END: END,
         "retrieve_node": "retrieve_node",
         "career_retrieve_node": "career_retrieve_node",
@@ -106,6 +108,8 @@ workflow.add_conditional_edges(
 
 # Conversational Node -> END
 workflow.add_edge("conversational_node", END)
+
+workflow.add_edge("save_memory_node", END)
 
 # Compile the graph
 app = workflow.compile()

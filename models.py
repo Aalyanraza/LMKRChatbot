@@ -56,6 +56,8 @@ class AgentState(TypedDict):
     generated_answer: Optional[GeneratedAnswer]
     validation: Optional[ValidationResult]
     retry_count: int
+    thread_id: str
+    destination: str
 
 # --- FastAPI Models ---
 

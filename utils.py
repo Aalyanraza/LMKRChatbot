@@ -1,5 +1,6 @@
 # Utility Functions - Text Processing & Helpers
-
+import os
+import time
 from typing import List
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import config
@@ -60,3 +61,13 @@ def load_from_file(file_path: str) -> str:
             return f.read()
     except:
         return ""
+
+def is_file_fresh(file_path: str, hours: int) -> bool:
+    """
+    Checks if a file exists and was modified within the last 'hours' hours.
+    """
+    if not os.path.exists(file_path):
+        return False
+    
+    file_age_seconds = time.time() - os.path.getmtime(file_path)
+    return file_age_seconds < (hours * 3600)

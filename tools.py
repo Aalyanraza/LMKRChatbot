@@ -1,29 +1,46 @@
 # Web Scraping Tools
-
+import os
+import subprocess
 import time
 from selenium import webdriver
 from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.edge.service import Service as EdgeService # Add this import
 from bs4 import BeautifulSoup
 import requests
 from langchain_core.tools import tool
 import config
 from utils import clean_text_content, save_to_file
 
+
 def fetch_and_clean_body(url: str, depth=0) -> str:
-    """
-    Fetches a webpage using Selenium and returns cleaned body text.
-    """
     if depth > 1:
         return ""
     
     print(f" 🖥️ Booting Headless Edge for: {url}")
+    
+    # 1. Configure Options
     edge_options = EdgeOptions()
-    edge_options.add_argument("--headless")
+    edge_options.add_argument("--headless=new") 
     edge_options.add_argument("--no-sandbox")
+    edge_options.add_argument("--log-level=3")
+    edge_options.add_argument("--silent")
+    edge_options.add_argument("--disable-gpu") 
+    edge_options.add_argument("--disable-software-rasterizer")
+    edge_options.add_argument("--disable-dev-shm-usage")
+    edge_options.add_argument("--remote-debugging-port=0")
+    
+    # Crucial: This experimental option kills the DevTools logging
+    edge_options.add_experimental_option('excludeSwitches', ['enable-logging', 'enable-automation'])
+
+    # 2. Configure Service (This kills the 'LoadEnclaveImageW' and renderer noise)
+    # We create a service that hides the window and pipes logs to nowhere
+    edge_service = EdgeService()
+    if os.name == 'nt': # Windows only flag
+        edge_service.creation_flags = subprocess.CREATE_NO_WINDOW
     
     driver = None
     try:
-        driver = webdriver.Edge(options=edge_options)
+        driver = webdriver.Edge(options=edge_options, service=edge_service)
         driver.get(url)
         time.sleep(config.SELENIUM_WAIT_TIME)
         soup = BeautifulSoup(driver.page_source, "html.parser")
