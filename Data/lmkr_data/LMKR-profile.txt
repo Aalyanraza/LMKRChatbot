@@ -1,0 +1,307 @@
+LMKR INTERNATIONAL CORPORATE PROFILE
+=====================================
+
+COMPANY OVERVIEW
+================
+
+About LMKR
+----------
+Established in 1994, LMKR initially focused on mitigating exploration and production risks in the oil and gas sector. It later pioneered South Asia's first online exploration and production data repository, becoming one of only three globally. Today, LMKR is a leading global technology company involved in Oil & Gas, Clean Energy, Transportation, Agri-Tech, and Integrated Security projects. 
+
+Key Facts:
+- Operating in 30+ countries
+- Approximately 700 employees
+- Serves Fortune 500 clients
+- Received Gartner's acknowledgment in its Market Guide for Oil and Gas Upstream Modeling Suites
+- Website: lmkr.com
+
+BUSINESS DIVISIONS & SERVICES
+=============================
+
+1. GEOSCIENCE SERVICES
+----------------------
+Our Geoscience Services optimize oilfield operations and profitability through software solutions and remote/on-site expertise delivery. Specializing in detailed reservoir characterization, we unveil reserves' full potential and minimize risks in key decision points of the oil & gas lifecycle.
+
+Key Services Include:
+- Integrated E&P Studies
+- Software Support and consulting for E&P companies
+- Seismic Processing services
+- Petrophysical Services
+- E&P Project Data Management
+- Geological, geophysical, and geotechnical analyses
+- Seismic data processing and interpretation services
+
+Led by experienced geoscientists and engineering consultants, our service approach aims to boost production and profitability.
+
+2. LOGISTICS SOLUTIONS
+---------------------
+LMKR understands the complex ecosystem of the logistics world, where inefficiencies translate to wasted time, inflated costs, and frustrated customers. We leverage cutting-edge technology to bridge the gaps between stakeholders, enabling seamless movement of goods from origin to destination.
+
+Key Features:
+- Real-time supply chain visibility
+- Stronger stakeholder connections
+- Route optimization through data-driven insights
+- Streamlined logistics operations
+- Avoidance of costly inefficiencies
+- Ensure on-time deliveries
+- Focus on core business operations
+
+3. AGRI-TECH SOLUTIONS
+---------------------
+LMKR prioritizes Agri-tech as a key vertical, dedicated to advancing farming practices in Pakistan. Collaborating with governments and farmers, the focus is on transforming the agricultural landscape for sustainable food security.
+
+Key Offerings:
+- GIS and agri-data visualization
+- Land record surveys and digitization
+- Laboratory Information Management Systems (LIMS)
+- Government-to-farmer engagement platform
+- Farmer web portals and mobile apps (Smart Kisaan)
+- IoT and big data analytics for smart farming
+- Precise agronomic advisories to farmers
+
+Notable Achievement: In partnership with the Government of Punjab, LMKR supports over 4 million farmers across 36 districts, employing various tools and technologies for high-yield and productive farms.
+
+4. CLEAN ENERGY & RENEWABLE INVESTMENTS
+----------------------------------------
+Passionate about green energy, LMKR invests in innovative startups and technologies that facilitate the uptake of renewables across the globe. Rooted in the energy sector, LMKR understands the urgency of diversifying beyond finite hydrocarbons.
+
+Current Focus:
+- Solar energy tools and technologies
+- Enhancing sales and operations for solar installers
+- Investment in Step Solar - a company that designs and develops tools and mobile apps aimed at enabling solar system owners, developers and installers to consistently achieve the highest levels of performance, reliability and profitability for their solar installations
+- Collaborating with governments on sustainable energy policies to tackle climate change
+
+5. DATA MANAGEMENT SOLUTIONS
+----------------------------
+Our ISO-certified solutions streamline data and information management for oil and gas assets, facilitating informed decision-making while managing costs. We ensure your digital oilfield data is comprehensive, transparent, auditable, and secure, transforming it into actionable knowledge.
+
+Key Services:
+- Vendor-neutral physical and digital data management
+- Real-time access to verified, quality-controlled information
+- Corporate data management to minimize risk and enhance shareholder value
+- Project data management to optimize processes for focused hydrocarbon discovery
+- Provides stability in oil and gas exploration and production amidst market volatility
+
+6. TRANSPORTATION SOLUTIONS (TRVERSE BRAND)
+--------------------------------------------
+LMKR, operating under the transportation brand TRVERSE (www.trverse.com), offers comprehensive mobility solutions for future cities, encompassing intelligent transportation systems, station and vehicle security, and real-time traveler information.
+
+Core Expertise:
+- Intelligent Transport Systems (ITS)
+- Automatic Fare Collection systems
+- Integrated Security systems
+- Mobile App Development
+- Transport Management systems
+
+Transportation Service Categories:
+
+A. Transport Management
+- Help cities implement 21st-century transport systems that prioritize safety, efficiency, and sustainability
+- Develop tailored, cost-effective solutions to meet current and future needs
+- Strategic approach and client relationships ensure customized implementations
+
+B. Integrated Security
+- Enhance road, vehicle, and station safety through comprehensive security systems
+- Combining human and machine expertise to detect anomalies and prevent incidents
+- Advanced detection capabilities for anomaly prevention
+
+C. Information Systems
+- Deploy robust travel management and vehicle systems for seamless experience
+- Mobile apps offer up-to-date travel information
+- Passenger information and infotainment systems benefit commuters and enable local businesses to reach broader audience
+
+D. Scheduling and Dispatch
+- Computer-aided scheduling and dispatch system tracks locations of all vehicles
+- Compares vehicle positions with planned data
+- Provides dispatcher with complete overview of operational processes
+- Systematizes vehicle release procedures
+- Maintains precise records of driver work and vehicle operations
+- Enables quick and effective communication between drivers and traffic control operators
+
+E. Signal Priority System
+- Reduce transit times and improve schedule adherence
+- Increase road network efficiency as measured by mobility of people
+- Smooth traffic flow by detecting vehicle presence and predicting arrival times
+- Real-time, adaptive systems incorporating information on traffic flow, coordination, and schedule adherence
+
+F. Automated Fare Collection
+- Integrated ticketing systems providing faster transactions
+- Affordable operations and efficient collection of payments
+- Works with various devices for sale and validation of travel documents
+- Supports virtual and physical tickets, tokens, and transport cards
+- Compatible with multiple payment modes (mobile, card, cash)
+
+7. SMART CITY SOLUTIONS
+-----------------------
+LMKR, a pioneering company in Pakistan, specializes in smart city solutions to address the challenges of growing urban populations seeking better opportunities. Collaborating with governments, the focus is on improving public service delivery and enhancing the quality of life in expanding urban centers.
+
+Goals and Approach:
+- Create smarter and safer cities through data-driven insights
+- Implement intelligent infrastructure
+- Leverage expertise in IoT, GIS, big data, and integrated security management technologies
+
+Track Record:
+- Successfully undertaken diverse projects with federal and provincial governments
+- Worked with leading telecom operators, banking institutions, and electricity supply companies
+- Contributed to realization of smarter cities and enriched urban experiences
+
+TECHNICAL EXPERTISE
+===================
+LMKR crafts tailored software across platforms, empowering business to succeed. We leverage cutting-edge technology for intuitive experiences and airtight security, including diverse payment gateway integration for seamless transactions.
+
+Core Technical Capabilities:
+- Advanced Frontend Frameworks: Building intuitive and responsive user interfaces
+- Secure Backend Languages: Ensuring data integrity and system robustness
+- Modern Development Tools: Streamlining development and accelerating time to market
+- Cloud-Based Infrastructure: Offering scalability and cost-effective solutions
+- Seamless Payment Gateway Integration: Enabling secure and convenient online transactions
+
+PRODUCTS
+========
+
+1. GVERSE GEOGRAPHIX
+-------------------
+Website: gverse.com
+
+GVERSE GeoGraphix is a comprehensive and cost-efficient geoscience system, featuring leading-edge mapping, geological, geophysical, and petrophysical modeling, along with well and field planning, and state-of-the-art 3D visualization.
+
+Key Strengths:
+- Tight integration with other geoscience tools
+- Scalable architecture
+- Flexible licensing options
+- Tailored functionality for various workflows
+- Low IT support requirements
+- Cost advantage of 30% compared to similar offerings
+- Workflow optimization
+
+Product Categories:
+- Data Management and Mapping tools
+- Geology analysis tools
+- Petrophysics analysis tools
+- Field Planning tools
+
+Features and Capabilities:
+- Connectivity with other geoscience software suites
+- Imaging and visualization tools
+- Stratigraphic analysis capabilities
+- Reservoir characterization tools
+- Well and field planning tools
+- Enhanced efficiency for geoscientists and engineers
+
+2. TRVERSE
+----------
+Website: www.trverse.com
+
+Intelligent Transport Systems use advanced information and communication technologies applied to vehicles and transport infrastructure. TRVERSE offers a whole host of products designed to perform various functions needed in a holistic transport system.
+
+Benefits:
+- Improve traffic management
+- Minimize congestion
+- Improve safety
+- Reduce impact of maintenance activities
+- Provide intelligent use of transport networks
+
+System Integration:
+- A full-fledged transport system is usually a cohesive system made of many individual component parts
+- In developing cities, upgrade of old systems is often a gradual process
+- TRVERSE products can be fully integrated into existing systems without requiring complete overhaul or custom built system
+
+TRVERSE Products and Services:
+[See Transportation Solutions section above for detailed product descriptions]
+
+3. XPOSIM
+---------
+XpoSim is a next-gen training simulation for the petroleum industry, uniquely integrating key phases of the exploration lifecycle. Providing invaluable insights for professionals and students, it exposes them to real-world scenarios supported by actual geological, geophysical, and petrophysical data.
+
+KEY CLIENTS (PROFILED PROJECTS)
+================================
+
+Oil & Gas Sector Clients:
+1. Halliburton - Software Development & Service Delivery
+2. The PhiloDrill Corporation - Reservoir Characterization Study
+3. Eni (ENI) - Multiple projects including Building Security Solutions and Corporate E&P Database Implementation Project
+4. BP/SAIC - BP E&P Global Data Management Project
+5. Shell Corporation - E&P Consultancy
+6. Orient Petroleum Pty Limited - Reservoir Characterization Study (Thin Sands)
+7. United Energy Pakistan (UEP) - IT Help Desk / Field Security Solution
+8. Sharjah National Oil Corporation (SNOC) - E&P Data Management Project
+
+Other Sector Clients:
+1. USAID - Shale Oil & Gas study for Indus Basins
+2. World Bank - Global Gas Flaring Study, Indonesia
+
+Regular Clients Include:
+- SierraCol Energy
+- Cenovus Energy
+- Ovintiv
+- Canadian Natural
+- ConocoPhillips
+- Sinopec (China National Petroleum Corporation)
+- BP Oil Company
+- Battelle
+- Kuwait Oil Company
+- Marathon Oil
+
+GLOBAL PRESENCE
+===============
+
+LMKR Office Locations:
+
+United States
+- Houston, TX / Denver, CO
+- Headquarters: LMK Resources Inc., Houston
+  6051 North Course Drive, Suite 300,
+  Houston, TX 77072, USA
+  Phone: +1.281.495.5657
+  Email: office@lmkr.com
+
+United Arab Emirates
+- Dubai - Corporate Headquarters
+  Office 3303, Level 33 Al Saqr Business Tower
+  Sheikh Zayed Road
+  Dubai, United Arab Emirates
+  P.O. Box 62163
+  Phone: +971.4.311.3739
+
+Pakistan
+- Islamabad / Karachi
+- Geophysical & Data Management Technology Center
+  LMK Resources Pakistan (Private) Limited
+  9th Floor, No 55-C, PTET/Ufone Tower,
+  Jinnah Avenue, Islamabad, Pakistan
+  Postal Code 44000
+  Phone: +92.51.111.101.101
+  Email: office@lmkr.com
+
+Malaysia
+- Kuala Lumpur - Technology Center
+  LMKR Asia SDN.BHD.
+  17-11 G-Tower, 199 Jalan Tun Razak, 50400
+  Kuala Lumpur, Malaysia
+  Phone: +603.2300.8700
+
+Channel Partners and Associated Offices:
+- Canada: Calgary - 119 office
+- Russia: KTIB
+- Azerbaijan: Operations present
+- Turkmenistan: Operations present
+- Kazakhstan: KTIB
+- China: GNT International, LNC.
+- Vietnam: EastSea Star Software
+- Japan: COSMOS-SHOJI
+- Philippines: EP Oilfield Services
+- Indonesia: PT EP Oilfield Supplies
+- Trinidad & Tobago: Port-of-Spain office (Q&A operations)
+- Mexico: Operations present
+- Colombia: Operations present
+- Angola: Geo Networks partner
+- Mauritius: Ebene office
+- Australia: EastSea Star Software operations
+- Libya: Operations present
+- Kuwait: Operations present
+- Nigeria: Operations present
+- Venezuela: Operations present
+
+MAP DESCRIPTION: Global presence map showing LMKR office locations marked in major cities across continents, with distinction between direct LMKR offices (solid markers) and Channel Partner offices (hollow markers), indicating worldwide operational footprint spanning North America, South America, Europe, Africa, Middle East, and Asia-Pacific regions.
+
+LOGO DESCRIPTION: The LMKR corporate logo features the company name "LMKR" with a modern, minimalist design. The initials are presented in a clean, professional sans-serif typeface. The company branding emphasizes technological innovation and global reach, consistent throughout all materials including the website (lmkr.com).

@@ -22,6 +22,8 @@ DATA_DIR = "Data/lmkr_data"
 DATA_FILE = "lmkr_combined.txt"
 DATA_PATH = os.path.join(DATA_DIR, DATA_FILE)
 
+LOCAL_PROFILE_PATH = "./Data/lmkr_data/LMKR-profile.txt"
+
 VECTOR_DB_DIR = "./vector_db"
 VECTOR_DB_NAME = "faiss_lmkr"
 VECTOR_DB_PATH = os.path.join(VECTOR_DB_DIR, VECTOR_DB_NAME)
@@ -190,21 +192,39 @@ def scrape_urls(urls: List[str]) -> List[Document]:
             
     return documents
 
+def load_local_documents(file_path: str) -> List[Document]:
+    """
+    Reads a local text file and wraps it in a LangChain Document object.
+    """
+    if not os.path.exists(file_path):
+        print(f"⚠️  WARNING: Local file {file_path} not found. Skipping...")
+        return []
+    
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        
+        print(f"📄 Loaded local document: {file_path} ({len(content)} characters)")
+        return [Document(page_content=content, metadata={"source": file_path})]
+    except Exception as e:
+        print(f"❌ Error reading {file_path}: {e}")
+        return []
+
 # ==========================================
 # 2. EMBEDDING MODULE
 # ==========================================
 def generate_vector_db(docs: List[Document]):
     if not docs: 
+        print("🛑 No documents to embed.")
         return
 
     print(f"\n💎 Initializing OpenAI Embeddings: {EMBEDDING_MODEL_NAME}...")
-    # Switched to OpenAIEmbeddings
     embeddings = OpenAIEmbeddings(
         model=EMBEDDING_MODEL_NAME,
         openai_api_key=config.OPENAI_API_KEY
     )
     
-    print(f"✂️  Splitting text into {CHUNK_SIZE} char chunks...")
+    print(f"✂️  Splitting {len(docs)} documents into {CHUNK_SIZE} char chunks...")
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
@@ -214,12 +234,11 @@ def generate_vector_db(docs: List[Document]):
     split_docs = splitter.split_documents(docs)
     
     # 1. Embed the documents
-    print(f"🧠 Embedding {len(split_docs)} chunks...")
+    #print(f"🧠 Embedding {len(split_docs)} chunks...")
     doc_texts = [d.page_content for d in split_docs]
     vectors = np.array(embeddings.embed_documents(doc_texts)).astype('float32')
     
-    # 2. Setup the Quantized Index
-    # IMPORTANT: Dimension must be 1536 for OpenAI 3-small
+    # 2. Setup the Quantized Index (SQ8)
     dimension = 1536 
     index = faiss.index_factory(dimension, "SQ8") 
     
@@ -239,14 +258,19 @@ def generate_vector_db(docs: List[Document]):
     # 5. Save
     if not os.path.exists(config.VECTOR_DB_DIR): os.makedirs(config.VECTOR_DB_DIR)
     vector_db.save_local(config.VECTOR_DB_PATH)
-    print(f"✅ OpenAI FAISS database saved to {config.VECTOR_DB_PATH}")
-
-
+    print(f"✅ OpenAI FAISS database saved successfully to {config.VECTOR_DB_PATH}")
 
 if __name__ == "__main__":
     import urllib3
     urllib3.disable_warnings()
     if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
     
-    docs = scrape_urls(TARGET_URLS)
-    generate_vector_db(docs)
+    # 1. Scrape content from the web
+    all_documents = scrape_urls(TARGET_URLS)
+    
+    # 2. Load the local LMKR corporate profile 
+    local_profile_docs = load_local_documents(LOCAL_PROFILE_PATH)
+    all_documents.extend(local_profile_docs)
+    
+    # 3. Generate the combined Vector DB
+    generate_vector_db(all_documents)
