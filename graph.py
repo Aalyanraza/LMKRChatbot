@@ -118,9 +118,9 @@ workflow.add_edge("reflection_node", END)
 app = workflow.compile()
 
 # visulization (optional)
-graph_repr = app.get_graph() 
-png_bytes = graph_repr.draw_mermaid_png() 
-with open("workflow_graph.png", "wb") as f:
-    f.write(png_bytes)
+# graph_repr = app.get_graph() 
+# png_bytes = graph_repr.draw_mermaid_png() 
+# with open("workflow_graph.png", "wb") as f:
+#     f.write(png_bytes)
 
 print("✅ Graph compiled successfully!")

@@ -71,4 +71,9 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     """Response model for chat endpoint"""
     answer: str
+    # ADD THIS: Field to hold the actual context chunks retrieved
+    sources: List[str] = Field(
+        default_factory=list, 
+        description="The actual text chunks from the documentation used to answer the question"
+    )
     steps: list = Field(default_factory=list, description="Optional: show the user the reasoning steps")

@@ -26,17 +26,8 @@ async def root():
 
 @api.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
-    """
-    Main endpoint to interact with the RAG Chatbot.
-    
-    Args:
-        request: ChatRequest with question and optional user_id
-    
-    Returns:
-        ChatResponse with answer and steps
-    """
     try:
-        # Initialize the state
+        # ... (initial_state setup remains the same) ...
         initial_state = {
             "question": request.question,
             "thread_id": request.user_id,
@@ -51,21 +42,30 @@ async def chat_endpoint(request: ChatRequest):
         # Run the graph
         result = app.invoke(initial_state)
         
-        # Extract the final answer
-        final_answer = result.get("generated_answer", "No answer generated.")
+        # 1. Extract the generated answer object
+        generated_obj = result.get("generated_answer")
         
-        # Handle different response types
-        if hasattr(final_answer, 'content'):
-            final_answer = final_answer.content
-        elif hasattr(final_answer, 'answer'):
-            final_answer = final_answer.answer
+        # 2. Extract the actual source chunks from the state
+        # These were populated by the retrieve_nodes
+        source_chunks = result.get("context_chunks", [])
         
-        return ChatResponse(answer=str(final_answer))
+        # 3. Clean up the final answer string
+        final_answer = "No answer generated."
+        if generated_obj:
+            if hasattr(generated_obj, 'answer'):
+                final_answer = generated_obj.answer
+            else:
+                final_answer = str(generated_obj)
+
+        # 4. Return response with both answer and source chunks
+        return ChatResponse(
+            answer=final_answer,
+            sources=source_chunks
+        )
     
     except Exception as e:
         print(f"Server Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
 @api.get("/health")
 async def health_check():
     """
