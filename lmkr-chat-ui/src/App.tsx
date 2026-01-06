@@ -705,6 +705,7 @@ export default function App() {
           font-family: inherit;
           max-height: 120px;
           resize: none;
+          length : 1.4
         }
 
         .input-field::placeholder {
@@ -713,7 +714,7 @@ export default function App() {
 
         /* Send Button */
         .send-btn {
-          padding: 0.75rem;
+          padding: 0.85rem;
           background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
           border: none;
           border-radius: 10px;
@@ -725,8 +726,8 @@ export default function App() {
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
           flex-shrink: 0;
-          width: 40px;
-          height: 40px;
+          
+          aspect-ratio: 1;
         }
 
         .send-btn:hover:not(:disabled) {
