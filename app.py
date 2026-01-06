@@ -1,14 +1,23 @@
 # Main Entry Point & FastAPI Server
 
+from fastapi.responses import StreamingResponse
+from langchain_core.messages import AIMessage
 from fastapi import FastAPI, HTTPException
-import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 from models import ChatRequest, ChatResponse, AgentState
 from graph import app
+import uvicorn
 import config
-
+import json
 # --- FastAPI Setup ---
 
 api = FastAPI(title=config.API_TITLE)
+api.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @api.get("/")
 async def root():
@@ -23,6 +32,58 @@ async def root():
             "user_id": "default_user"
         }
     }
+
+@api.post("/chat_stream") # New Endpoint
+async def chat_stream_endpoint(request: ChatRequest):
+    """
+    Streaming endpoint that yields tokens immediately.
+    """
+    initial_state = {
+        "question": request.question,
+        "thread_id": request.user_id,
+        "user_id": request.user_id,
+        "retry_count": 0,
+        "context_chunks": [],
+        "generated_answer": None,
+        "validation": None,
+        "destination": "retrieve_node"
+    }
+
+    async def event_generator():
+        async for event in app.astream_events(initial_state, version="v1"):
+            
+            # PHASE 1: STREAM TEXT (Immediate)
+            if event["event"] == "on_chat_model_stream":
+                if event["metadata"].get("langgraph_node") in ["generate_node", "conversational_node"]:
+                    chunk = event["data"]["chunk"]
+                    if hasattr(chunk, "content") and chunk.content:
+                        yield f"data: {json.dumps({'type': 'token', 'content': chunk.content})}\n\n"
+
+            # PHASE 2: SOURCES (As soon as retrieval finishes)
+            elif event["event"] == "on_chain_end":
+                if event["name"] in ["retrieve_node", "career_retrieve_node", "news_retrieve_node"]:
+                    output = event["data"].get("output", {})
+                    chunks = output.get("context_chunks", [])
+                    if chunks:
+                        yield f"data: {json.dumps({'type': 'sources', 'content': chunks})}\n\n"
+
+            # PHASE 3: VALIDATION STATUS (Async Post-Check)
+            elif event["event"] == "on_chain_end":
+                if event["name"] == "validate_node":
+                    output = event["data"].get("output", {})
+                    val_result = output.get("validation") #
+                    
+                    if val_result:
+                        status_payload = {
+                            "type": "status",
+                            "is_valid": val_result.is_valid,
+                            "reason": val_result.reason
+                        }
+                        yield f"data: {json.dumps(status_payload)}\n\n"
+
+        yield f"data: {json.dumps({'type': 'done'})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 @api.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):

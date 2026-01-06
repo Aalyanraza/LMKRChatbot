@@ -7,7 +7,8 @@ from models import (
     QueryAugmentation, GeneratedAnswer, ValidationResult, 
     RouteDecision, AgentState, ProceduralRule
 )
-from llm_helpers import query_llm_structured
+from langchain_core.messages import SystemMessage, HumanMessage
+from llm_helpers import query_llm_structured, get_streaming_llm
 from guards import detect_malicious_prompt, apply_input_guard, apply_output_guard
 from tools import scrape_careers_tool, scrape_news_fast_tool
 from utils import split_text_into_chunks, load_from_file, save_to_file, is_file_fresh
@@ -131,59 +132,64 @@ def news_retrieve_node(state: AgentState):
 
 # --- Node 6: CONVERSATIONAL ---
 def conversational_node(state: AgentState):
-    print("\n💬 Node: Conversational (Direct LLM)...")
+    print("\n💬 Node: Conversational (Streaming)...")
     question = state["question"]
-    prompt = f"""
-    User Input: {question}
-    Instructions:
-    1. You are a helpful corporate assistant for LMKR.
-    2. Respond naturally to the greeting or conversational question.
-    3. Do NOT make up technical facts. Just be polite.
-    """
-    response = query_llm_structured(prompt, GeneratedAnswer)
-    # Ensure source is set correctly
-    if response: response.sources_used = ["Conversational"]
-    return {"generated_answer": response or GeneratedAnswer(answer="Hello!", sources_used=["Conversational"]), "context_chunks": []}
+    
+    # Use standard streaming LLM
+    llm = get_streaming_llm()
+    messages = [
+        SystemMessage(content="You are a helpful corporate assistant for LMKR. Respond naturally."),
+        HumanMessage(content=question)
+    ]
+    
+    # .invoke() here waits for full completion BUT emits events we can catch in app.py
+    response = llm.invoke(messages)
+    
+    return {
+        "generated_answer": GeneratedAnswer(answer=response.content, sources_used=["Conversational"]),
+        "context_chunks": []
+    }
 
 # --- Node 7: GENERATE ---
-def generate_node(state: AgentState):
-    print("\n✍️ Node: Generate (Unified)...")
+async def generate_node(state: AgentState):
+    print("\n✍️ Node: Generate (Streaming with Safety Guards)...")
     context_data = "\n---\n".join(state["context_chunks"])
-    today = datetime.now().strftime("%B %d, %Y") # e.g., December 23, 2025
-
-    namespace = ("memories", state["thread_id"], "episodes")
-    past_episodes = memory_store.search(namespace, query=state["question"], limit=2)
+    today = datetime.now().strftime("%B %d, %Y")
     
-    # Format episodes as context
-    formatted_history = "\n".join([f"Past Question: {m.value['q']}\nPast Answer: {m.value['a']}" for m in past_episodes])
+    # 1. Embed Safety Rules directly into System Prompt
+    # This replaces the need for the blocking 'output_guard_node'
+    system_prompt = f"""
+    You are an expert assistant for LMKR.
     
-    prompt = f"""
-    You are an expert assistant for LMKR, a global technology and software company. Use the provided Context Data to answer the user's question accurately.
-    Past Conversations:
-    {formatted_history}
-
+    SAFETY & INSTRUCTIONS:
+    1. Answer using ONLY the Context Data.
+    2. Do NOT mention competitors like 'Schlumberger' or 'Securiti'.
+    3. If the answer involves PII (emails/phones), ensure they are public contact points.
+    4. Be concise and professional.
+    """
+    
+    user_prompt = f"""
     Context Data:
     {context_data}
     
     Current Date: {today}
     User Question: {state['question']}
-    
-    Instructions:
-    1. Answer using ONLY the Context Data.
-    2. The Context contains real dates up to {today}. Report them exactly as written.
-    3. Use 'Past Experiences' to maintain consistency in tone or to handle follow-up pronouns.
-    4. Answer using 'New Context' only.
-    5. Any date in the context that is equal to or prior to {today} should be treated as a factual past event
-    6. If information is missing, state "I do not have enough information."
     """
-    response = query_llm_structured(prompt, GeneratedAnswer)
-    print("   Generated Answer: ", response.answer if response else "No response.")
+    
+    llm = get_streaming_llm() #
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=user_prompt)
+    ]
+    
+    # The stream happens in app.py. We just invoke here.
+    response = await llm.ainvoke(messages)
+    
+    return {
+        "generated_answer": GeneratedAnswer(answer=response.content, sources_used=["Context"]), 
+        "retry_count": state.get("retry_count", 0) + 1
+    }
 
-    # Safety Check for length-limit failures
-    if response is None:
-        return {"generated_answer": GeneratedAnswer(answer="I hit a processing limit. Please try a more specific question.", sources_used=["Error"])}
-        
-    return {"generated_answer": response, "retry_count": state.get("retry_count", 0) + 1}
 
 # --- Node 8: OUTPUT GUARD ---
 def output_guard_node(state: AgentState):

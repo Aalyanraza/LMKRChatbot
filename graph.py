@@ -60,7 +60,7 @@ workflow.add_node("career_retrieve_node", career_retrieve_node)
 workflow.add_node("news_retrieve_node", news_retrieve_node)
 workflow.add_node("conversational_node", conversational_node)
 workflow.add_node("generate_node", generate_node)
-workflow.add_node("output_guard_node", output_guard_node)
+#workflow.add_node("output_guard_node", output_guard_node)
 workflow.add_node("validate_node", validate_node)
 workflow.add_node("save_memory_node", save_memory_node)
 workflow.add_node("reflection_node", reflection_node)
@@ -89,11 +89,13 @@ workflow.add_edge("news_retrieve_node", "generate_node")
 workflow.add_edge("retrieve_node", "generate_node")
 
 # Generator -> Output Guard
-workflow.add_edge("generate_node", "output_guard_node")
+#workflow.add_edge("generate_node", "output_guard_node")
 
 # Output Guard -> Validator
-workflow.add_edge("output_guard_node", "validate_node")
+#workflow.add_edge("output_guard_node", "validate_node")
 
+# Generator -> Validator
+workflow.add_edge("generate_node", "validate_node")
 # Conditional edges from Validator (The Loop)
 workflow.add_conditional_edges(
     "validate_node",

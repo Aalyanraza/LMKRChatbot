@@ -1,11 +1,25 @@
 # LLM Helpers - Structured Querying using OpenAI native parsing
 from typing import Optional, Type, TypeVar
 from pydantic import BaseModel
-import config
 from embeddings_setup import openai_client
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+import config
 
 # Define a TypeVar for the Pydantic model
 T = TypeVar("T", bound=BaseModel)
+
+def get_streaming_llm():
+    """
+    Returns a LangChain ChatOpenAI instance configured for streaming.
+    This integrates with LangGraph's astream_events.
+    """
+    return ChatOpenAI(
+        model=config.LLM_MODEL,
+        temperature=config.LLM_TEMPERATURE,
+        openai_api_key=config.OPENAI_API_KEY,
+        streaming=True 
+    )
 
 def query_llm_structured(prompt_text: str, response_model: Type[T]) -> Optional[T]:
     """
