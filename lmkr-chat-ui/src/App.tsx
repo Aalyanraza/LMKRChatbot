@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { readStream, type StreamEvent } from './stream';
 import lmkrLogo from './assets/lmkr.png';
 
