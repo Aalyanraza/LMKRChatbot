@@ -131,14 +131,37 @@ def news_retrieve_node(state: AgentState):
     return {"context_chunks": [doc.page_content for doc in retrieved_docs]}
 
 # --- Node 6: CONVERSATIONAL ---
+# nodes.py
+
 def conversational_node(state: AgentState):
-    print("\n💬 Node: Conversational (Streaming)...")
+    print("\n💬 Node: Conversational (Receptionist Persona)...")
     question = state["question"]
+    
+    # 1. Engineered System Prompt
+    # Defines role, tone, and strict topic boundaries.
+    system_prompt = """
+    You are the Virtual Receptionist for LMKR, a global petroleum technology and software company.
+    
+    YOUR ROLE:
+    - You are the first point of contact on the LMKR website.
+    - Be professional, warm, concise, and helpful.
+    - Assist with greetings, navigation, and high-level company inquiries.
+    
+    BOUNDARIES & RESTRICTIONS:
+    - You are NOT a general purpose AI assistant. Do NOT answer general trivia, math problems, or questions about biology, pop culture, politics or any question unrelated to LMKR.
+    - If a user asks an off-topic question, politely decline and steer the conversation back to LMKR.
+    
+    RESPONSE EXAMPLES:
+    - User: "What is the strongest animal?"
+      You: "I am designed to assist with LMKR-related inquiries, so I don't have information on wildlife. However, I can help you with our GVERSE software or career opportunities!"
+    - User: "Hi"
+      You: "Hello! Welcome to LMKR. How can I assist you today? I can help with information about our software solutions, services, or job openings."
+    """
     
     # Use standard streaming LLM
     llm = get_streaming_llm()
     messages = [
-        SystemMessage(content="You are a helpful corporate assistant for LMKR. Respond naturally."),
+        SystemMessage(content=system_prompt),
         HumanMessage(content=question)
     ]
     
@@ -149,7 +172,6 @@ def conversational_node(state: AgentState):
         "generated_answer": GeneratedAnswer(answer=response.content, sources_used=["Conversational"]),
         "context_chunks": []
     }
-
 # --- Node 7: GENERATE ---
 async def generate_node(state: AgentState):
     print("\n✍️ Node: Generate (Streaming with Safety Guards)...")
@@ -159,13 +181,14 @@ async def generate_node(state: AgentState):
     # 1. Embed Safety Rules directly into System Prompt
     # This replaces the need for the blocking 'output_guard_node'
     system_prompt = f"""
-    You are an expert assistant for LMKR.
+    You are an expert receptionist for LMKR.
     
-    SAFETY & INSTRUCTIONS:
-    1. Answer using ONLY the Context Data.
-    2. Do NOT mention competitors like 'Schlumberger' or 'Securiti'.
-    3. If the answer involves PII (emails/phones), ensure they are public contact points.
-    4. Be concise and professional.
+    CRITICAL INSTRUCTIONS:
+    1. **Context Strictness**: Answer using ONLY the provided Context Data. If the answer is not in the context, explicitly state "I don't have enough information in my documents to answer that."
+    2. **Anti-Hallucination**: Do NOT invent dates, email addresses, or specific figures. If a specific date is not in the text, do not guess it.
+    3. **Competitor Block**: Do NOT mention or recommend competitors such as 'Schlumberger' or 'Securiti' under any circumstances.
+    4. **Safety**: Do not generate toxic, biased, or harmful content.
+    5. **Tone**: Be concise, professional, and helpful.
     """
     
     user_prompt = f"""
@@ -189,7 +212,6 @@ async def generate_node(state: AgentState):
         "generated_answer": GeneratedAnswer(answer=response.content, sources_used=["Context"]), 
         "retry_count": state.get("retry_count", 0) + 1
     }
-
 
 # --- Node 8: OUTPUT GUARD ---
 def output_guard_node(state: AgentState):

@@ -1,77 +1,37 @@
-# Graph Construction & Workflow Compilation
-# from IPython.display import Image, display
+# graph.py
+
 from langgraph.graph import StateGraph, START, END
 from models import AgentState
 from nodes import (
-    input_guard_node,
     router_node,
     retrieve_node,
     career_retrieve_node,
     news_retrieve_node,
     conversational_node,
     generate_node,
-    output_guard_node,
-    validate_node,
     save_memory_node,
-    reflection_node
+    # input_guard_node, # Keeping import, removing from flow
+    # validate_node,    # Keeping import, removing from flow
+    # reflection_node   # Reflection requires validation/retries, so we skip it too
 )
-
-# --- Edge Routing Logic ---
-
-def validation_router(state: AgentState):
-    """
-    Determines where to route based on validation results.
-    Returns END if valid or max retries reached, otherwise loops back to appropriate node.
-    """
-    validation = state.get("validation")
-    retry_count = state.get("retry_count", 0)
-    destination = state.get("destination", "retrieve_node")
-    
-    # 1. Success
-    if validation and validation.is_valid:
-        return "save_memory_node"
-    
-    # 2. Max Retries
-    if retry_count >= 2:
-        print("🛑 Max retries reached. Returning best effort.")
-        return END
-    
-    # 3. FAILURE -> LOOP BACK
-    print(f"🔄 Validation Failed: {validation.reason if validation else 'Unknown'}. Expanding search context...")
-    
-    if destination == "career_retrieve_node":
-        return "career_retrieve_node"
-    elif destination == "news_retrieve_node":
-        return "news_retrieve_node"
-    elif destination == "conversational_node":
-        return "conversational_node"
-    else:
-        return "retrieve_node"
 
 # --- Build the Workflow Graph ---
 
 workflow = StateGraph(AgentState)
 
-# Add all nodes
-workflow.add_node("input_guard_node", input_guard_node)
+# Add active nodes
 workflow.add_node("router_node", router_node)
 workflow.add_node("retrieve_node", retrieve_node)
 workflow.add_node("career_retrieve_node", career_retrieve_node)
 workflow.add_node("news_retrieve_node", news_retrieve_node)
 workflow.add_node("conversational_node", conversational_node)
 workflow.add_node("generate_node", generate_node)
-#workflow.add_node("output_guard_node", output_guard_node)
-workflow.add_node("validate_node", validate_node)
 workflow.add_node("save_memory_node", save_memory_node)
-workflow.add_node("reflection_node", reflection_node)
 
-# Set entry point
-workflow.set_entry_point("input_guard_node")
+# Set entry point directly to Router (Skipping Input Guard)
+workflow.set_entry_point("router_node")
 
-# Input Guard -> Router
-workflow.add_edge("input_guard_node", "router_node")
-
-# Conditional edges from Router
+# Conditional edges from Router (Unchanged)
 workflow.add_conditional_edges(
     "router_node",
     lambda x: x["destination"],
@@ -83,46 +43,19 @@ workflow.add_conditional_edges(
     }
 )
 
-# Connect Retrieval Nodes to Generator
+# Connect Retrieval Nodes to Generator (Unchanged)
 workflow.add_edge("career_retrieve_node", "generate_node")
 workflow.add_edge("news_retrieve_node", "generate_node")
 workflow.add_edge("retrieve_node", "generate_node")
 
-# Generator -> Output Guard
-#workflow.add_edge("generate_node", "output_guard_node")
-
-# Output Guard -> Validator
-#workflow.add_edge("output_guard_node", "validate_node")
-
-# Generator -> Validator
-workflow.add_edge("generate_node", "validate_node")
-# Conditional edges from Validator (The Loop)
-workflow.add_conditional_edges(
-    "validate_node",
-    validation_router,
-    {
-        "save_memory_node": "save_memory_node",  # ADD THIS LINE
-        END: END,
-        "retrieve_node": "retrieve_node",
-        "career_retrieve_node": "career_retrieve_node",
-        "news_retrieve_node": "news_retrieve_node",
-        "conversational_node": "conversational_node"
-    }
-)
+# Generator -> Save Memory -> END (Skipping Validation & Output Guard)
+workflow.add_edge("generate_node", "save_memory_node")
+workflow.add_edge("save_memory_node", END)
 
 # Conversational Node -> END
 workflow.add_edge("conversational_node", END)
-workflow.add_edge("save_memory_node", "reflection_node")
-workflow.add_edge("reflection_node", END)
-
 
 # Compile the graph
 app = workflow.compile()
 
-# visulization (optional)
-# graph_repr = app.get_graph() 
-# png_bytes = graph_repr.draw_mermaid_png() 
-# with open("workflow_graph.png", "wb") as f:
-#     f.write(png_bytes)
-
-print("✅ Graph compiled successfully!")
+print("✅ Linear Graph (No Guards/Validation) compiled successfully!")

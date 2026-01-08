@@ -2,16 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { readStream, type StreamEvent } from './stream';
 import lmkrLogo from './assets/lmkr.png';
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   text: string;
   sources: string[];
-  validation: {
-    status: 'pending' | 'valid' | 'invalid' | 'none';
-    reason?: string;
-  };
   isStreaming: boolean;
 }
 
@@ -21,6 +18,10 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const bufferRef = useRef<string>('');
+  const displayedLengthRef = useRef<number>(0);
+  const intervalRef = useRef<number | null>(null);
+  const currentMsgIdRef = useRef<string>('');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -38,6 +39,62 @@ export default function App() {
     }
   }, [input]);
 
+  // Smooth streaming: display buffered text gradually
+  const startSmoothDisplay = (msgId: string) => {
+    if (intervalRef.current) return; // Already running
+    
+    intervalRef.current = window.setInterval(() => {
+      const buffer = bufferRef.current;
+      const displayedLength = displayedLengthRef.current;
+      
+      if (displayedLength < buffer.length) {
+        // Add 1-2 characters at a time for smoother effect
+        const chunkSize = Math.min(2, buffer.length - displayedLength);
+        const newDisplayedLength = displayedLength + chunkSize;
+        const textToShow = buffer.substring(0, newDisplayedLength);
+        
+        setMessages((currentMessages) => {
+          const newMessages = [...currentMessages];
+          const msgIndex = newMessages.findIndex((m) => m.id === msgId);
+          if (msgIndex !== -1) {
+            newMessages[msgIndex] = { ...newMessages[msgIndex], text: textToShow };
+          }
+          return newMessages;
+        });
+        
+        displayedLengthRef.current = newDisplayedLength;
+      }
+    }, 20); // Update every 20ms for smoother display
+  };
+
+  const stopSmoothDisplay = (msgId: string) => {
+    // Don't immediately stop - let the interval catch up with the buffer
+    // We'll check if we're done in the interval itself
+    const checkComplete = () => {
+      if (displayedLengthRef.current >= bufferRef.current.length) {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        setMessages((currentMessages) => {
+          const newMessages = [...currentMessages];
+          const msgIndex = newMessages.findIndex((m) => m.id === msgId);
+          if (msgIndex !== -1) {
+            newMessages[msgIndex] = { 
+              ...newMessages[msgIndex], 
+              isStreaming: false 
+            };
+          }
+          return newMessages;
+        });
+      } else {
+        // Check again soon
+        setTimeout(checkComplete, 50);
+      }
+    };
+    checkComplete();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
@@ -47,7 +104,6 @@ export default function App() {
       role: 'user',
       text: input,
       sources: [],
-      validation: { status: 'none' },
       isStreaming: false,
     };
 
@@ -57,13 +113,17 @@ export default function App() {
       role: 'assistant',
       text: '',
       sources: [],
-      validation: { status: 'pending' },
       isStreaming: true,
     };
 
     setMessages((prev) => [...prev, userMsg, aiPlaceholder]);
     setInput('');
     setIsLoading(true);
+    
+    // Reset buffer for new message
+    bufferRef.current = '';
+    displayedLengthRef.current = 0;
+    currentMsgIdRef.current = aiMsgId;
 
     try {
       const response = await fetch('http://localhost:8000/chat_stream', {
@@ -73,39 +133,35 @@ export default function App() {
       });
 
       await readStream(response, (event: StreamEvent) => {
-        setMessages((currentMessages) => {
-          const newMessages = [...currentMessages];
-          const msgIndex = newMessages.findIndex((m) => m.id === aiMsgId);
-
-          if (msgIndex === -1) return currentMessages;
-
-          const msg = { ...newMessages[msgIndex] };
-
-          if (event.type === 'token' && typeof event.content === 'string') {
-            msg.text += event.content;
-          } else if (event.type === 'sources' && Array.isArray(event.content)) {
-            msg.sources = event.content;
-          } else if (event.type === 'status') {
-            msg.validation = {
-              status: event.is_valid ? 'valid' : 'invalid',
-              reason: event.reason,
-            };
-          } else if (event.type === 'done') {
-            msg.isStreaming = false;
-            setIsLoading(false);
+        if (event.type === 'token' && typeof event.content === 'string') {
+          // Add token to buffer
+          bufferRef.current += event.content;
+          // Start smooth display if not already running
+          if (!intervalRef.current) {
+            startSmoothDisplay(aiMsgId);
           }
-
-          newMessages[msgIndex] = msg;
-          return newMessages;
-        });
+        } else if (event.type === 'sources' && Array.isArray(event.content)) {
+          setMessages((currentMessages) => {
+            const newMessages = [...currentMessages];
+            const msgIndex = newMessages.findIndex((m) => m.id === aiMsgId);
+            if (msgIndex !== -1) {
+              newMessages[msgIndex] = { ...newMessages[msgIndex], sources: event.content as string[] };
+            }
+            return newMessages;
+          });
+        } else if (event.type === 'done') {
+          stopSmoothDisplay(aiMsgId);
+          setIsLoading(false);
+        }
       });
     } catch (error) {
       console.error('Stream error:', error);
+      stopSmoothDisplay(aiMsgId);
       setIsLoading(false);
       setMessages((prev) => {
         const last = [...prev];
         if (last[last.length - 1]?.role === 'assistant') {
-          last[last.length - 1].text += '\n[Connection Error - Please try again]';
+          last[last.length - 1].text = bufferRef.current + '\n[Connection Error - Please try again]';
           last[last.length - 1].isStreaming = false;
         }
         return last;
@@ -118,26 +174,6 @@ export default function App() {
       e.preventDefault();
       handleSubmit(e as any);
     }
-  };
-
-  const renderValidationBadge = (validation: Message['validation']) => {
-    const { status } = validation;
-
-    if (status === 'pending') {
-      return (
-        <div className="badge verifying">
-          <div className="spinner"></div>
-          <span>Verifying...</span>
-        </div>
-      );
-    }
-    if (status === 'valid') {
-      return <div className="badge valid">✓ Verified Safe</div>;
-    }
-    if (status === 'invalid') {
-      return <div className="badge invalid">⚠ Possible Inaccuracy</div>;
-    }
-    return null;
   };
 
   return (
@@ -161,7 +197,7 @@ export default function App() {
               <div className="empty-state-text">
                 <div className="empty-state-title">Welcome to LMKR</div>
                 <div className="empty-state-subtitle">
-                  Start a conversation to explore AI-powered insights with verified sources and intelligent validation.
+                  Start a conversation to explore AI-powered insights with verified sources.
                 </div>
               </div>
             </div>
@@ -169,22 +205,20 @@ export default function App() {
             <div>
               {messages.map((msg) => (
                 <div key={msg.id} className={`message-group ${msg.role}`}>
-                  <div className={`avatar ${msg.role}`}>{msg.role === 'user' ? '👤' : '🤖'}</div>
+                  <div className={`avatar ${msg.role}`}>
+                    {msg.role === 'user' ? '👤' : <img src={lmkrLogo} alt="LMKR" className="avatar-logo" />}
+                  </div>
                   <div className="message-content">
                     <div className={`message-bubble ${msg.role}`}>
-                      {msg.text || (msg.isStreaming ? '✨ Thinking...' : '')}
+                      {msg.text ? <ReactMarkdown>{msg.text}</ReactMarkdown> : (msg.isStreaming ? <div className="typing-indicator"><span></span><span></span><span></span></div> : '')}
                     </div>
                     {msg.role === 'assistant' && (
                       <>
                         <div className="message-metadata">
-                          {renderValidationBadge(msg.validation)}
                           {msg.sources.length > 0 && (
                             <div className="badge sources">📚 {msg.sources.length} Sources Used</div>
                           )}
                         </div>
-                        {msg.validation.status === 'invalid' && msg.validation.reason && (
-                          <div className="validation-note">⚠️ {msg.validation.reason}</div>
-                        )}
                       </>
                     )}
                   </div>
@@ -535,8 +569,15 @@ export default function App() {
         }
 
         .avatar.assistant {
-          background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-          color: white;
+          background: transparent;
+          box-shadow: none;
+          border-radius: 0;
+        }
+
+        .avatar-logo {
+          width: 60px;
+          height: 60px;
+          object-fit: contain;
         }
 
         /* Message Bubble */
@@ -583,6 +624,25 @@ export default function App() {
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
+        /* Markdown Styles */
+        .message-bubble strong {
+          font-weight: 600;
+          color: #60a5fa;
+        }
+
+        .message-bubble.user strong {
+          color: #fef3c7;
+        }
+
+        .message-bubble p {
+          margin: 0;
+          margin-bottom: 0.5rem;
+        }
+
+        .message-bubble p:last-child {
+          margin-bottom: 0;
+        }
+
         /* Metadata */
         .message-metadata {
           display: flex;
@@ -615,22 +675,39 @@ export default function App() {
           }
         }
 
-        .badge.verifying {
-          background: rgba(59, 130, 246, 0.15);
-          color: #60a5fa;
-          border: 1px solid rgba(96, 165, 250, 0.3);
+        .typing-indicator {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+          padding: 0.5rem 0;
         }
 
-        .badge.valid {
-          background: rgba(34, 197, 94, 0.15);
-          color: #4ade80;
-          border: 1px solid rgba(74, 222, 128, 0.3);
+        .typing-indicator span {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: currentColor;
+          opacity: 0.5;
+          animation: typingBounce 1.4s infinite;
         }
 
-        .badge.invalid {
-          background: rgba(239, 68, 68, 0.15);
-          color: #f87171;
-          border: 1px solid rgba(248, 113, 113, 0.3);
+        .typing-indicator span:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+          0%, 60%, 100% {
+            opacity: 0.5;
+            transform: translateY(0);
+          }
+          30% {
+            opacity: 1;
+            transform: translateY(-10px);
+          }
         }
 
         .badge.sources {
@@ -639,28 +716,7 @@ export default function App() {
           border: 1px solid rgba(216, 180, 254, 0.3);
         }
 
-        .spinner {
-          width: 16px;
-          height: 16px;
-          border: 2px solid currentColor;
-          border-top-color: transparent;
-          border-radius: 50%;
-          animation: spin 0.6s linear infinite;
-        }
 
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-
-        .validation-note {
-          color: #f87171;
-          font-size: 0.85rem;
-          padding: 0.75rem 1rem;
-          background: rgba(239, 68, 68, 0.1);
-          border-left: 3px solid #f87171;
-          border-radius: 6px;
-          margin-top: 0.5rem;
-        }
 
         /* Input Area */
         .input-area {
