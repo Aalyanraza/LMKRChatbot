@@ -1,14 +1,16 @@
 # Main Entry Point & FastAPI Server
 
-from fastapi.responses import StreamingResponse
-from langchain_core.messages import AIMessage
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from models import ChatRequest, ChatResponse, AgentState
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+from fastapi import FastAPI, HTTPException
+from livekit.api import AccessToken, VideoGrants
+from langchain_core.messages import AIMessage
 from graph import app
 import uvicorn
 import config
 import json
+import os
 # --- FastAPI Setup ---
 
 api = FastAPI(title=config.API_TITLE)
@@ -127,6 +129,7 @@ async def chat_endpoint(request: ChatRequest):
     except Exception as e:
         print(f"Server Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 @api.get("/health")
 async def health_check():
     """
@@ -137,6 +140,34 @@ async def health_check():
         "version": "1.0",
         "service": config.API_TITLE
     }
+
+@api.get("/get_token")
+async def get_livekit_token(user_id: str = "user-1", room_name: str = "chat-room"):
+    """
+    Generates a secure token for the frontend to join the voice room.
+    """
+    api_key = os.getenv("LIVEKIT_API_KEY")
+    api_secret = os.getenv("LIVEKIT_API_SECRET")
+
+    if not api_key or not api_secret:
+        raise HTTPException(status_code=500, detail="LiveKit keys missing")
+
+    # Create a token with permissions
+    grant = VideoGrants(
+        room_join=True,
+        room=room_name,
+        can_publish=True,
+        can_subscribe=True
+    )
+
+    token = AccessToken(api_key, api_secret) \
+        .with_identity(user_id) \
+        .with_name(user_id) \
+        .with_grants(grant)
+    
+    print (f"Generated LiveKit token for user {user_id} in room {room_name}")   
+
+    return {"token": token.to_jwt(), "url": os.getenv("LIVEKIT_URL")}
 
 # --- Entry Point for Debugging/Production ---
 

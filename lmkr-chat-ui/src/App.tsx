@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send } from 'lucide-react';
+import { Send, Mic, X } from 'lucide-react';
 import { readStream, type StreamEvent } from './stream';
 import lmkrLogo from './assets/lmkr.png';
 import ReactMarkdown from 'react-markdown';
+import { LiveKitRoom, RoomAudioRenderer, ControlBar } from '@livekit/components-react';
+import '@livekit/components-styles';
 
 interface Message {
   id: string;
@@ -16,12 +18,42 @@ export default function App() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [voiceChatActive, setVoiceChatActive] = useState(false);
+  const [voiceToken, setVoiceToken] = useState<string>('');
+  const [voiceUrl, setVoiceUrl] = useState<string>('');
+  const [isLoadingVoice, setIsLoadingVoice] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bufferRef = useRef<string>('');
   const displayedLengthRef = useRef<number>(0);
   const intervalRef = useRef<number | null>(null);
   const currentMsgIdRef = useRef<string>('');
+
+  const handleStartVoiceChat = async () => {
+    try {
+      setIsLoadingVoice(true);
+      const randomId = 'user_' + Math.floor(Math.random() * 10000);
+      const response = await fetch(`http://localhost:8000/get_token?user_id=${randomId}`);
+      const data = await response.json();
+      
+      if (data.token && data.url) {
+        setVoiceToken(data.token);
+        setVoiceUrl(data.url);
+        setVoiceChatActive(true);
+      }
+    } catch (error) {
+      console.error('Failed to start voice chat:', error);
+      alert('Failed to connect to voice chat. Please try again.');
+    } finally {
+      setIsLoadingVoice(false);
+    }
+  };
+
+  const handleEndVoiceChat = () => {
+    setVoiceChatActive(false);
+    setVoiceToken('');
+    setVoiceUrl('');
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -126,6 +158,7 @@ export default function App() {
     currentMsgIdRef.current = aiMsgId;
 
     try {
+      
       const response = await fetch('http://localhost:8000/chat_stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -185,6 +218,14 @@ export default function App() {
           <div className="header-title">LMKR</div>
           <div className="header-subtitle">AI Assistant</div>
         </div>
+        <button 
+          onClick={handleStartVoiceChat}
+          disabled={isLoadingVoice}
+          className="voice-btn"
+          title="Start voice chat"
+        >
+          <Mic size={20} />
+        </button>
       </div>
 
       {/* Main Container */}
@@ -249,6 +290,36 @@ export default function App() {
           </form>
         </div>
       </div>
+
+      {/* Voice Chat Modal */}
+      {voiceChatActive && voiceToken && voiceUrl && (
+        <div className="voice-chat-overlay">
+          <div className="voice-chat-modal">
+            <div className="voice-chat-header">
+              <h2>Voice Chat</h2>
+              <button 
+                onClick={handleEndVoiceChat}
+                className="close-voice-btn"
+                title="End voice chat"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <div className="voice-chat-container">
+              <LiveKitRoom
+                serverUrl={voiceUrl}
+                token={voiceToken}
+                connect={true}
+                audio={true}
+                video={false}
+              >
+                <RoomAudioRenderer />
+                <ControlBar />
+              </LiveKitRoom>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes rotateBg {
@@ -835,6 +906,114 @@ export default function App() {
 
         .gap-1 {
           gap: 0.25rem;
+        }
+
+        .items-start {
+          align-items: flex-start;
+        }
+
+        /* Voice Chat Button */
+        .voice-btn {
+          position: absolute;
+          right: 2rem;
+          padding: 0.75rem 1.25rem;
+          background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+          border: none;
+          border-radius: 10px;
+          color: white;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .voice-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .voice-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        /* Voice Chat Modal */
+        .voice-chat-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.6);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          backdrop-filter: blur(4px);
+        }
+
+        .voice-chat-modal {
+          background: linear-gradient(135deg, rgba(13, 27, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+          border: 1px solid rgba(148, 163, 184, 0.2);
+          border-radius: 20px;
+          width: 90%;
+          max-width: 500px;
+          max-height: 80vh;
+          display: flex;
+          flex-direction: column;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+          backdrop-filter: blur(20px);
+        }
+
+        .voice-chat-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1.5rem;
+          border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .voice-chat-header h2 {
+          margin: 0;
+          font-size: 1.25rem;
+          color: #e2e8f0;
+        }
+
+        .close-voice-btn {
+          background: transparent;
+          border: none;
+          color: #94a3b8;
+          cursor: pointer;
+          padding: 0.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        .close-voice-btn:hover {
+          background: rgba(148, 163, 184, 0.1);
+          color: #e2e8f0;
+        }
+
+        .voice-chat-container {
+          flex: 1;
+          overflow: auto;
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* LiveKit Component Overrides */
+        .voice-chat-container [data-lk-layout] {
+          width: 100%;
+          height: 100%;
         }
 
         .items-start {

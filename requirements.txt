@@ -17,11 +17,18 @@ langchain-openai
 openai
 
 # --- Guardrails AI & Validators ---
-guardrails-ai
-# Underlying packages for hub://guardrails/detect_pii and detect_prompt_injection
-guardrails-grhub-detect-pii
-guardrails
+# guardrails-ai
+# # Underlying packages for hub://guardrails/detect_pii and detect_prompt_injection
+# guardrails-grhub-detect-pii
+# guardrails
 
-# --- Validator Dependencies ---
-presidio-analyzer
-presidio-anonymizer
+# # --- Validator Dependencies ---
+# presidio-analyzer
+# presidio-anonymizer
+
+# --- Voice & Real-time (LiveKit) ---
+livekit-agents
+livekit-plugins-openai
+livekit-plugins-deepgram
+livekit-plugins-silero
+livekit-api
