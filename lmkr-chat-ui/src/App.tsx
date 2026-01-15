@@ -1,11 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Mic, X } from 'lucide-react';
+import { Send, Mic, MicOff, X, PhoneOff } from 'lucide-react';
 import { readStream, type StreamEvent } from './stream';
 import lmkrLogo from './assets/lmkr.png';
 import ReactMarkdown from 'react-markdown';
-import { LiveKitRoom, RoomAudioRenderer, ControlBar } from '@livekit/components-react';
+import { 
+  LiveKitRoom, 
+  RoomAudioRenderer, 
+  useLocalParticipant,
+  useConnectionState,
+  useSpeakingParticipants
+} from '@livekit/components-react';
+import { ConnectionState } from 'livekit-client';
 import '@livekit/components-styles';
 
+// --- Interfaces ---
 interface Message {
   id: string;
   role: 'user' | 'assistant';
@@ -13,6 +21,117 @@ interface Message {
   sources: string[];
   isStreaming: boolean;
 }
+
+// --- Custom Components ---
+
+// 1. The Visualizer Orb (Revolving Circle)
+type AgentState = 'listening' | 'speaking' | 'thinking' | 'disconnected';
+
+// Updated Visualizer Orb accepting state
+const VoiceOrb = ({ state }: { state: AgentState }) => {
+  return (
+    <div className={`orb-container ${state}`}>
+      <div className="orb-ring-outer"></div>
+      <div className="orb-ring-inner"></div>
+      <div className="orb-core"></div>
+    </div>
+  );
+};
+
+const VoiceSession = ({ onDisconnect }: { onDisconnect: () => void }) => {
+  const connectionState = useConnectionState();
+  
+  // Hook that returns an array of everyone currently speaking
+  const activeSpeakers = useSpeakingParticipants();
+
+  // Check if any remote person (the AI Agent) is speaking
+  const isAgentSpeaking = activeSpeakers.some(p => !p.isLocal);
+  
+  // Check if you (the local user) are speaking
+  const isUserSpeaking = activeSpeakers.some(p => p.isLocal);
+  
+  const [agentState, setAgentState] = useState<AgentState>('disconnected');
+
+  useEffect(() => {
+    if (connectionState !== ConnectionState.Connected) {
+      setAgentState('disconnected');
+      return;
+    }
+
+    if (isAgentSpeaking) {
+      setAgentState('speaking');
+    } else if (isUserSpeaking) {
+      setAgentState('listening');
+    } else {
+      setAgentState('thinking');
+    }
+  }, [connectionState, isAgentSpeaking, isUserSpeaking]);
+
+  const getStatusText = () => {
+    switch (agentState) {
+      case 'speaking': return 'Agent Speaking';
+      case 'listening': return 'Listening...';
+      case 'thinking': return 'Thinking...';
+      default: return 'Connecting...';
+    }
+  };
+
+  return (
+    <div className="voice-agent-interface">
+      <div className="voice-header-status">
+        <span className={`live-indicator ${connectionState === ConnectionState.Connected ? 'active' : ''}`}></span> 
+        Live Session
+      </div>
+
+      <div className="visualizer-area">
+        <VoiceOrb state={agentState} />
+        <div className={`agent-status-text ${agentState}`}>
+          {getStatusText()}
+        </div>
+      </div>
+
+      <RoomAudioRenderer />
+      
+      <CustomVoiceControls onDisconnect={onDisconnect} />
+    </div>
+  );
+};
+
+// 2. Custom Minimal Controls (Mic & Hangup only)
+const CustomVoiceControls = ({ onDisconnect }: { onDisconnect: () => void }) => {
+  const { localParticipant } = useLocalParticipant();
+  const [isMuted, setIsMuted] = useState(false);
+
+  const toggleMute = () => {
+    if (localParticipant) {
+      const newMutedState = !isMuted;
+      localParticipant.setMicrophoneEnabled(!newMutedState);
+      setIsMuted(newMutedState);
+    }
+  };
+
+  return (
+    <div className="custom-voice-controls">
+      <button 
+        className={`control-btn ${isMuted ? 'muted' : ''}`} 
+        onClick={toggleMute}
+        title={isMuted ? "Unmute" : "Mute"}
+      >
+        {isMuted ? <MicOff size={24} /> : <Mic size={24} />}
+      </button>
+      
+      <button 
+        className="control-btn hangup" 
+        onClick={onDisconnect}
+        title="End Call"
+      >
+        <PhoneOff size={24} />
+      </button>
+    </div>
+  );
+};
+
+// --- Main App Component ---
 
 export default function App() {
   const [input, setInput] = useState('');
@@ -22,6 +141,7 @@ export default function App() {
   const [voiceToken, setVoiceToken] = useState<string>('');
   const [voiceUrl, setVoiceUrl] = useState<string>('');
   const [isLoadingVoice, setIsLoadingVoice] = useState(false);
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bufferRef = useRef<string>('');
@@ -71,16 +191,15 @@ export default function App() {
     }
   }, [input]);
 
-  // Smooth streaming: display buffered text gradually
+  // Smooth streaming logic (kept as is)
   const startSmoothDisplay = (msgId: string) => {
-    if (intervalRef.current) return; // Already running
+    if (intervalRef.current) return;
     
     intervalRef.current = window.setInterval(() => {
       const buffer = bufferRef.current;
       const displayedLength = displayedLengthRef.current;
       
       if (displayedLength < buffer.length) {
-        // Add 1-2 characters at a time for smoother effect
         const chunkSize = Math.min(2, buffer.length - displayedLength);
         const newDisplayedLength = displayedLength + chunkSize;
         const textToShow = buffer.substring(0, newDisplayedLength);
@@ -96,12 +215,10 @@ export default function App() {
         
         displayedLengthRef.current = newDisplayedLength;
       }
-    }, 20); // Update every 20ms for smoother display
+    }, 20);
   };
 
   const stopSmoothDisplay = (msgId: string) => {
-    // Don't immediately stop - let the interval catch up with the buffer
-    // We'll check if we're done in the interval itself
     const checkComplete = () => {
       if (displayedLengthRef.current >= bufferRef.current.length) {
         if (intervalRef.current) {
@@ -120,7 +237,6 @@ export default function App() {
           return newMessages;
         });
       } else {
-        // Check again soon
         setTimeout(checkComplete, 50);
       }
     };
@@ -152,13 +268,11 @@ export default function App() {
     setInput('');
     setIsLoading(true);
     
-    // Reset buffer for new message
     bufferRef.current = '';
     displayedLengthRef.current = 0;
     currentMsgIdRef.current = aiMsgId;
 
     try {
-      
       const response = await fetch('http://localhost:8000/chat_stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -167,9 +281,7 @@ export default function App() {
 
       await readStream(response, (event: StreamEvent) => {
         if (event.type === 'token' && typeof event.content === 'string') {
-          // Add token to buffer
           bufferRef.current += event.content;
-          // Start smooth display if not already running
           if (!intervalRef.current) {
             startSmoothDisplay(aiMsgId);
           }
@@ -234,7 +346,7 @@ export default function App() {
         <div className="chat-container" id="chatContainer">
           {messages.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-state-icon">💭</div>
+              <div className="empty-state-icon">💬</div>
               <div className="empty-state-text">
                 <div className="empty-state-title">Welcome to LMKR</div>
                 <div className="empty-state-subtitle">
@@ -291,138 +403,195 @@ export default function App() {
         </div>
       </div>
 
-      {/* Voice Chat Modal */}
+      {/* Modern Voice Chat Modal */}
+      {/* Modern Voice Chat Modal */}
       {voiceChatActive && voiceToken && voiceUrl && (
         <div className="voice-chat-overlay">
           <div className="voice-chat-modal">
-            <div className="voice-chat-header">
-              <h2>Voice Chat</h2>
-              <button 
-                onClick={handleEndVoiceChat}
-                className="close-voice-btn"
-                title="End voice chat"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <div className="voice-chat-container">
-              <LiveKitRoom
-                serverUrl={voiceUrl}
-                token={voiceToken}
-                connect={true}
-                audio={true}
-                video={false}
-              >
-                <RoomAudioRenderer />
-                <ControlBar />
-              </LiveKitRoom>
-            </div>
+            <LiveKitRoom
+              serverUrl={voiceUrl}
+              token={voiceToken}
+              connect={true}
+              audio={true}
+              video={false}
+              data-lk-theme="default"
+              style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+            >
+              {/* REPLACED THE OLD MANUAL CONTENT WITH THE SMART COMPONENT */}
+              <VoiceSession onDisconnect={handleEndVoiceChat} />
+            </LiveKitRoom>
           </div>
         </div>
       )}
 
       <style>{`
+        /* --- ORB ANIMATIONS --- */
+        .voice-agent-interface {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          padding: 2rem;
+          color: white;
+          background: radial-gradient(circle at center, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0) 70%);
+        }
+
+        .voice-header-status {
+          font-size: 0.9rem;
+          color: #94a3b8;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-weight: 600;
+        }
+
+        .live-indicator {
+          width: 8px;
+          height: 8px;
+          background-color: #ef4444;
+          border-radius: 50%;
+          box-shadow: 0 0 10px #ef4444;
+          animation: pulse-red 2s infinite;
+        }
+
+        .visualizer-area {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2rem;
+        }
+
+        .orb-container {
+          position: relative;
+          width: 200px;
+          height: 200px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* The Core */
+        .orb-core {
+          position: absolute;
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          background: radial-gradient(circle at 30% 30%, rgba(96, 165, 250, 0.2), rgba(37, 99, 235, 0.6));
+          box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), inset 0 0 20px rgba(147, 197, 253, 0.4);
+          z-index: 10;
+          animation: core-pulse 3s ease-in-out infinite;
+        }
+
+        /* Outer Spinning Ring */
+        .orb-ring-outer {
+          position: absolute;
+          width: 180px;
+          height: 180px;
+          border-radius: 50%;
+          border: 2px solid transparent;
+          border-top-color: rgba(96, 165, 250, 0.6);
+          border-right-color: rgba(59, 130, 246, 0.3);
+          box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+          animation: spin 8s linear infinite;
+        }
+
+        /* Inner Spinning Ring */
+        .orb-ring-inner {
+          position: absolute;
+          width: 140px;
+          height: 140px;
+          border-radius: 50%;
+          border: 2px solid transparent;
+          border-bottom-color: rgba(167, 139, 250, 0.8);
+          border-left-color: rgba(139, 92, 246, 0.3);
+          animation: spin-reverse 5s linear infinite;
+        }
+
+        .agent-status-text {
+          font-size: 1.1rem;
+          color: #e2e8f0;
+          font-weight: 300;
+          letter-spacing: 0.5px;
+          animation: fadePulse 3s infinite;
+        }
+
+        /* --- CUSTOM CONTROLS --- */
+        .custom-voice-controls {
+          display: flex;
+          gap: 1.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .control-btn {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+          background: rgba(30, 41, 59, 0.6);
+          border: 1px solid rgba(148, 163, 184, 0.2);
+          color: white;
+          backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover {
+          transform: translateY(-4px);
+          background: rgba(51, 65, 85, 0.8);
+        }
+
+        .control-btn.muted {
+          background: rgba(255, 255, 255, 0.1);
+          color: #94a3b8;
+        }
+
+        .control-btn.hangup {
+          background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .control-btn.hangup:hover {
+           box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* --- KEYFRAMES --- */
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spin-reverse {
+          0% { transform: rotate(360deg); }
+          100% { transform: rotate(0deg); }
+        }
+
+        @keyframes core-pulse {
+          0%, 100% { transform: scale(1); opacity: 0.9; box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+          50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 60px rgba(96, 165, 250, 0.8); }
+        }
+        
+        @keyframes pulse-red {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+
+        @keyframes fadePulse {
+           0%, 100% { opacity: 0.6; }
+           50% { opacity: 1; }
+        }
+        
+        /* Rest of existing styles... */
+
         @keyframes rotateBg {
           0% { background: linear-gradient(0deg, #0d1b2a 0%, #456586ff 100%); }
-          1% { background: linear-gradient(3.6deg, #0d1b2a 0%, #456586ff 100%); }
-          2% { background: linear-gradient(7.2deg, #0d1b2a 0%, #456586ff 100%); }
-          3% { background: linear-gradient(10.8deg, #0d1b2a 0%, #456586ff 100%); }
-          4% { background: linear-gradient(14.4deg, #0d1b2a 0%, #456586ff 100%); }
-          5% { background: linear-gradient(18deg, #0d1b2a 0%, #456586ff 100%); }
-          6% { background: linear-gradient(21.6deg, #0d1b2a 0%, #456586ff 100%); }
-          7% { background: linear-gradient(25.2deg, #0d1b2a 0%, #456586ff 100%); }
-          8% { background: linear-gradient(28.8deg, #0d1b2a 0%, #456586ff 100%); }
-          9% { background: linear-gradient(32.4deg, #0d1b2a 0%, #456586ff 100%); }
-          10% { background: linear-gradient(36deg, #0d1b2a 0%, #456586ff 100%); }
-          11% { background: linear-gradient(39.6deg, #0d1b2a 0%, #456586ff 100%); }
-          12% { background: linear-gradient(43.2deg, #0d1b2a 0%, #456586ff 100%); }
-          13% { background: linear-gradient(46.8deg, #0d1b2a 0%, #456586ff 100%); }
-          14% { background: linear-gradient(50.4deg, #0d1b2a 0%, #456586ff 100%); }
-          15% { background: linear-gradient(54deg, #0d1b2a 0%, #456586ff 100%); }
-          16% { background: linear-gradient(57.6deg, #0d1b2a 0%, #456586ff 100%); }
-          17% { background: linear-gradient(61.2deg, #0d1b2a 0%, #456586ff 100%); }
-          18% { background: linear-gradient(64.8deg, #0d1b2a 0%, #456586ff 100%); }
-          19% { background: linear-gradient(68.4deg, #0d1b2a 0%, #456586ff 100%); }
-          20% { background: linear-gradient(72deg, #0d1b2a 0%, #456586ff 100%); }
-          21% { background: linear-gradient(75.6deg, #0d1b2a 0%, #456586ff 100%); }
-          22% { background: linear-gradient(79.2deg, #0d1b2a 0%, #456586ff 100%); }
-          23% { background: linear-gradient(82.8deg, #0d1b2a 0%, #456586ff 100%); }
-          24% { background: linear-gradient(86.4deg, #0d1b2a 0%, #456586ff 100%); }
-          25% { background: linear-gradient(90deg, #0d1b2a 0%, #456586ff 100%); }
-          26% { background: linear-gradient(93.6deg, #0d1b2a 0%, #456586ff 100%); }
-          27% { background: linear-gradient(97.2deg, #0d1b2a 0%, #456586ff 100%); }
-          28% { background: linear-gradient(100.8deg, #0d1b2a 0%, #456586ff 100%); }
-          29% { background: linear-gradient(104.4deg, #0d1b2a 0%, #456586ff 100%); }
-          30% { background: linear-gradient(108deg, #0d1b2a 0%, #456586ff 100%); }
-          31% { background: linear-gradient(111.6deg, #0d1b2a 0%, #456586ff 100%); }
-          32% { background: linear-gradient(115.2deg, #0d1b2a 0%, #456586ff 100%); }
-          33% { background: linear-gradient(118.8deg, #0d1b2a 0%, #456586ff 100%); }
-          34% { background: linear-gradient(122.4deg, #0d1b2a 0%, #456586ff 100%); }
-          35% { background: linear-gradient(126deg, #0d1b2a 0%, #456586ff 100%); }
-          36% { background: linear-gradient(129.6deg, #0d1b2a 0%, #456586ff 100%); }
-          37% { background: linear-gradient(133.2deg, #0d1b2a 0%, #456586ff 100%); }
-          38% { background: linear-gradient(136.8deg, #0d1b2a 0%, #456586ff 100%); }
-          39% { background: linear-gradient(140.4deg, #0d1b2a 0%, #456586ff 100%); }
-          40% { background: linear-gradient(144deg, #0d1b2a 0%, #456586ff 100%); }
-          41% { background: linear-gradient(147.6deg, #0d1b2a 0%, #456586ff 100%); }
-          42% { background: linear-gradient(151.2deg, #0d1b2a 0%, #456586ff 100%); }
-          43% { background: linear-gradient(154.8deg, #0d1b2a 0%, #456586ff 100%); }
-          44% { background: linear-gradient(158.4deg, #0d1b2a 0%, #456586ff 100%); }
-          45% { background: linear-gradient(162deg, #0d1b2a 0%, #456586ff 100%); }
-          46% { background: linear-gradient(165.6deg, #0d1b2a 0%, #456586ff 100%); }
-          47% { background: linear-gradient(169.2deg, #0d1b2a 0%, #456586ff 100%); }
-          48% { background: linear-gradient(172.8deg, #0d1b2a 0%, #456586ff 100%); }
-          49% { background: linear-gradient(176.4deg, #0d1b2a 0%, #456586ff 100%); }
-          50% { background: linear-gradient(180deg, #0d1b2a 0%, #456586ff 100%); }
-          51% { background: linear-gradient(183.6deg, #0d1b2a 0%, #456586ff 100%); }
-          52% { background: linear-gradient(187.2deg, #0d1b2a 0%, #456586ff 100%); }
-          53% { background: linear-gradient(190.8deg, #0d1b2a 0%, #456586ff 100%); }
-          54% { background: linear-gradient(194.4deg, #0d1b2a 0%, #456586ff 100%); }
-          55% { background: linear-gradient(198deg, #0d1b2a 0%, #456586ff 100%); }
-          56% { background: linear-gradient(201.6deg, #0d1b2a 0%, #456586ff 100%); }
-          57% { background: linear-gradient(205.2deg, #0d1b2a 0%, #456586ff 100%); }
-          58% { background: linear-gradient(208.8deg, #0d1b2a 0%, #456586ff 100%); }
-          59% { background: linear-gradient(212.4deg, #0d1b2a 0%, #456586ff 100%); }
-          60% { background: linear-gradient(216deg, #0d1b2a 0%, #456586ff 100%); }
-          61% { background: linear-gradient(219.6deg, #0d1b2a 0%, #456586ff 100%); }
-          62% { background: linear-gradient(223.2deg, #0d1b2a 0%, #456586ff 100%); }
-          63% { background: linear-gradient(226.8deg, #0d1b2a 0%, #456586ff 100%); }
-          64% { background: linear-gradient(230.4deg, #0d1b2a 0%, #456586ff 100%); }
-          65% { background: linear-gradient(234deg, #0d1b2a 0%, #456586ff 100%); }
-          66% { background: linear-gradient(237.6deg, #0d1b2a 0%, #456586ff 100%); }
-          67% { background: linear-gradient(241.2deg, #0d1b2a 0%, #456586ff 100%); }
-          68% { background: linear-gradient(244.8deg, #0d1b2a 0%, #456586ff 100%); }
-          69% { background: linear-gradient(248.4deg, #0d1b2a 0%, #456586ff 100%); }
-          70% { background: linear-gradient(252deg, #0d1b2a 0%, #456586ff 100%); }
-          71% { background: linear-gradient(255.6deg, #0d1b2a 0%, #456586ff 100%); }
-          72% { background: linear-gradient(259.2deg, #0d1b2a 0%, #456586ff 100%); }
-          73% { background: linear-gradient(262.8deg, #0d1b2a 0%, #456586ff 100%); }
-          74% { background: linear-gradient(266.4deg, #0d1b2a 0%, #456586ff 100%); }
-          75% { background: linear-gradient(270deg, #0d1b2a 0%, #456586ff 100%); }
-          76% { background: linear-gradient(273.6deg, #0d1b2a 0%, #456586ff 100%); }
-          77% { background: linear-gradient(277.2deg, #0d1b2a 0%, #456586ff 100%); }
-          78% { background: linear-gradient(280.8deg, #0d1b2a 0%, #456586ff 100%); }
-          79% { background: linear-gradient(284.4deg, #0d1b2a 0%, #456586ff 100%); }
-          80% { background: linear-gradient(288deg, #0d1b2a 0%, #456586ff 100%); }
-          81% { background: linear-gradient(291.6deg, #0d1b2a 0%, #456586ff 100%); }
-          82% { background: linear-gradient(295.2deg, #0d1b2a 0%, #456586ff 100%); }
-          83% { background: linear-gradient(298.8deg, #0d1b2a 0%, #456586ff 100%); }
-          84% { background: linear-gradient(302.4deg, #0d1b2a 0%, #456586ff 100%); }
-          85% { background: linear-gradient(306deg, #0d1b2a 0%, #456586ff 100%); }
-          86% { background: linear-gradient(309.6deg, #0d1b2a 0%, #456586ff 100%); }
-          87% { background: linear-gradient(313.2deg, #0d1b2a 0%, #456586ff 100%); }
-          88% { background: linear-gradient(316.8deg, #0d1b2a 0%, #456586ff 100%); }
-          89% { background: linear-gradient(320.4deg, #0d1b2a 0%, #456586ff 100%); }
-          90% { background: linear-gradient(324deg, #0d1b2a 0%, #456586ff 100%); }
-          91% { background: linear-gradient(327.6deg, #0d1b2a 0%, #456586ff 100%); }
-          92% { background: linear-gradient(331.2deg, #0d1b2a 0%, #456586ff 100%); }
-          93% { background: linear-gradient(334.8deg, #0d1b2a 0%, #456586ff 100%); }
-          94% { background: linear-gradient(338.4deg, #0d1b2a 0%, #456586ff 100%); }
-          95% { background: linear-gradient(342deg, #0d1b2a 0%, #456586ff 100%); }
-          96% { background: linear-gradient(345.6deg, #0d1b2a 0%, #456586ff 100%); }
-          97% { background: linear-gradient(349.2deg, #0d1b2a 0%, #456586ff 100%); }
-          98% { background: linear-gradient(352.8deg, #0d1b2a 0%, #456586ff 100%); }
-          99% { background: linear-gradient(356.4deg, #0d1b2a 0%, #456586ff 100%); }
           100% { background: linear-gradient(360deg, #0d1b2a 0%, #456586ff 100%); }
         }
 
@@ -440,8 +609,6 @@ export default function App() {
 
         body {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
           background: linear-gradient(0deg, #0d1b2a 0%, #456586ff 100%);
           animation: rotateBg 15s linear infinite;
           color: #e2e8f0;
@@ -695,7 +862,6 @@ export default function App() {
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
-        /* Markdown Styles */
         .message-bubble strong {
           font-weight: 600;
           color: #60a5fa;
@@ -787,8 +953,6 @@ export default function App() {
           border: 1px solid rgba(216, 180, 254, 0.3);
         }
 
-
-
         /* Input Area */
         .input-area {
           padding: 1.5rem 2rem;
@@ -853,7 +1017,6 @@ export default function App() {
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
           flex-shrink: 0;
-          
           aspect-ratio: 1;
         }
 
@@ -869,47 +1032,6 @@ export default function App() {
         .send-btn:disabled {
           opacity: 0.5;
           cursor: not-allowed;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-          .message-content {
-            max-width: 90%;
-          }
-
-          .chat-container {
-            padding: 1.5rem;
-          }
-
-          .input-area {
-            padding: 1rem 1.5rem;
-          }
-
-          .header {
-            padding: 1rem 1.5rem;
-          }
-
-          .message-bubble {
-            padding: 1rem 1.25rem;
-            font-size: 0.9rem;
-          }
-        }
-
-        /* Utility */
-        .flex {
-          display: flex;
-        }
-
-        .flex-col {
-          flex-direction: column;
-        }
-
-        .gap-1 {
-          gap: 0.25rem;
-        }
-
-        .items-start {
-          align-items: flex-start;
         }
 
         /* Voice Chat Button */
@@ -940,7 +1062,7 @@ export default function App() {
           cursor: not-allowed;
         }
 
-        /* Voice Chat Modal */
+        /* Voice Chat Modal Overlay */
         .voice-chat-overlay {
           position: fixed;
           top: 0;
@@ -952,74 +1074,70 @@ export default function App() {
           align-items: center;
           justify-content: center;
           z-index: 1000;
-          backdrop-filter: blur(4px);
+          backdrop-filter: blur(8px);
         }
 
         .voice-chat-modal {
-          background: linear-gradient(135deg, rgba(13, 27, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+          background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%);
           border: 1px solid rgba(148, 163, 184, 0.2);
           border-radius: 20px;
           width: 90%;
-          max-width: 500px;
-          max-height: 80vh;
+          max-width: 450px;
+          height: 500px;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
           backdrop-filter: blur(20px);
+          overflow: hidden;
         }
 
-        .voice-chat-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 1.5rem;
-          border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        /* --- REACTIVE STATES --- */
+
+        /* 1. SPEAKING (Agent is talking) - Lights up bright Gold/Orange */
+        .orb-container.speaking .orb-core {
+          background: radial-gradient(circle at 30% 30%, rgba(251, 191, 36, 0.4), rgba(245, 158, 11, 0.9));
+          box-shadow: 0 0 60px rgba(245, 158, 11, 0.6);
+          animation: pulse-speaking 0.5s ease-in-out infinite alternate;
+        }
+        .orb-container.speaking .orb-ring-outer {
+          border-top-color: #fbbf24;
+          animation-duration: 2s; /* Spin fast */
+        }
+        .orb-container.speaking .orb-ring-inner {
+          border-bottom-color: #f59e0b;
+          animation-duration: 2s;
         }
 
-        .voice-chat-header h2 {
-          margin: 0;
-          font-size: 1.25rem;
-          color: #e2e8f0;
+        /* 2. LISTENING (User is talking) - Blue Pulse */
+        .orb-container.listening .orb-core {
+          background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.8));
+          transform: scale(0.95);
+          box-shadow: 0 0 30px rgba(37, 99, 235, 0.5);
+        }
+        .orb-container.listening .orb-ring-outer {
+          border-top-color: #3b82f6;
+          animation-duration: 4s;
         }
 
-        .close-voice-btn {
-          background: transparent;
-          border: none;
-          color: #94a3b8;
-          cursor: pointer;
-          padding: 0.5rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 8px;
-          transition: all 0.3s ease;
+        /* 3. THINKING (Silence) - Gentle Purple Breathe */
+        .orb-container.thinking .orb-core {
+          background: radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.6));
+          animation: core-pulse 3s ease-in-out infinite;
         }
 
-        .close-voice-btn:hover {
-          background: rgba(148, 163, 184, 0.1);
-          color: #e2e8f0;
-        }
+        /* Text status color changes */
+        .agent-status-text.speaking { color: #fbbf24; text-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
 
-        .voice-chat-container {
-          flex: 1;
-          overflow: auto;
-          padding: 1.5rem;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-        }
-
-        /* LiveKit Component Overrides */
-        .voice-chat-container [data-lk-layout] {
-          width: 100%;
-          height: 100%;
-        }
-
-        .items-start {
-          align-items: flex-start;
+        @keyframes pulse-speaking {
+          from { transform: scale(1); opacity: 0.8; }
+          to { transform: scale(1.15); opacity: 1; }
         }
       `}</style>
     </div>
   );
+}
+
+// Wrapper to handle props for controls inside LiveKit Room
+const CustomControls = ({ handleEndVoiceChat }: { handleEndVoiceChat: () => void }) => {
+   return <CustomVoiceControls onDisconnect={handleEndVoiceChat} />
 }

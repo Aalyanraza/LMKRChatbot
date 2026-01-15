@@ -10,6 +10,8 @@ import requests
 from langchain_core.tools import tool
 import config
 from utils import clean_text_content, save_to_file
+from embeddings_setup import vectorstore
+
 
 
 def fetch_and_clean_body(url: str, depth=0) -> str:
@@ -107,3 +109,16 @@ def scrape_news_fast_tool():
     except Exception as e:
         print(f"❌ Fast Scrape Error: {e}")
         return ""
+
+@tool
+def lookup_policy_tool(query: str):
+    """
+    Search the LMKR knowledge base for company history, software (GVERSE), 
+    services, internal policies, and general corporate information.
+    """
+    print(f"🔍 Tool Triggered: Vector Search for '{query}'...")
+    
+    # Simple semantic search using your existing vectorstore
+    docs = vectorstore.similarity_search(query, k=config.BASE_K_GENERAL)
+    
+    return "\n\n".join([d.page_content for d in docs])

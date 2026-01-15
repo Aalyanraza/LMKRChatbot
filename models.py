@@ -1,6 +1,6 @@
 # Pydantic Models for Structured Output
 
-from typing import List, Optional, TypedDict, Literal
+from typing import List, Optional, TypedDict, Literal, Any
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 # --- Output Models for Graph Nodes ---
@@ -61,6 +61,7 @@ class AgentState(TypedDict):
     retry_count: int
     thread_id: str
     destination: str
+    tool_calls: List[Any] 
 
 # --- FastAPI Models ---
 class ChatRequest(BaseModel):

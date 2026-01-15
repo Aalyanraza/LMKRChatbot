@@ -10,7 +10,7 @@ from models import (
 from langchain_core.messages import SystemMessage, HumanMessage
 from llm_helpers import query_llm_structured, get_streaming_llm
 from guards import detect_malicious_prompt, apply_input_guard, apply_output_guard
-from tools import scrape_careers_tool, scrape_news_fast_tool
+from tools import scrape_careers_tool, scrape_news_fast_tool, lookup_policy_tool
 from utils import split_text_into_chunks, load_from_file, save_to_file, is_file_fresh
 from embeddings_setup import vectorstore, embeddings, memory_store
 import config
@@ -58,6 +58,90 @@ def router_node(state: AgentState):
     destination = decision.destination if decision else "retrieve_node"
     print(f" 👉 Routing to: {destination}")
     return {"destination": destination}
+
+def decision_node(state: AgentState):
+    print("\n🤖 Node: Decision (LLM Selecting Tools)...")
+    question = state["question"]
+    
+    # 1. Bind Tools to the LLM
+    llm = get_streaming_llm()
+    tools = [lookup_policy_tool, scrape_careers_tool, scrape_news_fast_tool]
+    llm_with_tools = llm.bind_tools(tools)
+    
+    # 2. Invoke LLM to decide
+    # We force it to decide: either call a tool or just chat.
+    response = llm_with_tools.invoke(question)
+    
+    tool_calls = response.tool_calls if hasattr(response, 'tool_calls') else []
+    
+    if tool_calls:
+        print(f"   👉 LLM decided to call {len(tool_calls)} tools: {[t['name'] for t in tool_calls]}")
+    else:
+        print("   👉 LLM decided this is conversational (No tools).")
+
+    return {"tool_calls": tool_calls}
+
+# --- UPDATED Node 3: TOOL EXECUTION NODE ---
+def tool_execution_node(state: AgentState):
+    print("\n🛠️ Node: Executing Tools...")
+    tool_calls = state["tool_calls"]
+    results = []
+    question = state["question"]  # We need the question for the local search
+    
+    # Map tool names to actual functions
+    tool_map = {
+        "lookup_policy_tool": lookup_policy_tool,
+        "scrape_careers_tool": scrape_careers_tool,
+        "scrape_news_fast_tool": scrape_news_fast_tool
+    }
+    
+    for call in tool_calls:
+        tool_name = call["name"]
+        tool_args = call["args"]
+        
+        # --- SPECIAL HANDLING FOR CAREERS (Caching + Local Search) ---
+        if tool_name == "scrape_careers_tool":
+            print(f"   ▶️ Handling {tool_name} with Caching Strategy...")
+            try:
+                raw_text = ""
+                
+                # 1. Check Cache Freshness
+                if is_file_fresh(config.CAREERS_OUTPUT_FILE, config.SCRAPE_CACHE_HOURS):
+                    print(f"      ✅ Cache Hit: Loading careers data from file (Fresh < {config.SCRAPE_CACHE_HOURS}h).")
+                    raw_text = load_from_file(config.CAREERS_OUTPUT_FILE)
+                else:
+                    print("      ⚠️ Cache Miss: Invoking Scraper Tool...")
+                    # Invoke the tool directly to scrape and get text
+                    raw_text = tool_map[tool_name].invoke(tool_args)
+
+                # 2. Perform Local Vector Search (Context Filtering)
+                # We do this to avoid dumping the whole page into the prompt
+                if raw_text:
+                    print(f"      🔍 Searching through careers text for: '{question}'")
+                    chunks = split_text_into_chunks(raw_text)
+                    temp_vectorstore = FAISS.from_texts(chunks, embeddings)
+                    # Retrieve top 4 most relevant chunks
+                    relevant_docs = temp_vectorstore.similarity_search(question, k=4)
+                    search_results = "\n\n".join([d.page_content for d in relevant_docs])
+                    results.append(f"CAREERS DATA (Filtered):\n{search_results}")
+                else:
+                    results.append("CAREERS DATA: No information found.")
+
+            except Exception as e:
+                print(f"      ❌ Error processing careers data: {e}")
+                results.append(f"Error processing careers: {str(e)}")
+
+        # --- STANDARD HANDLING FOR OTHER TOOLS ---
+        elif tool_name in tool_map:
+            print(f"   ▶️ Running {tool_name}...")
+            try:
+                output = tool_map[tool_name].invoke(tool_args)
+                results.append(str(output))
+            except Exception as e:
+                print(f"   ❌ Error executing {tool_name}: {e}")
+                results.append(f"Error executing {tool_name}: {str(e)}")
+                
+    return {"context_chunks": results}
 
 # --- Node 3: GENERAL RETRIEVE ---
 def retrieve_node(state: AgentState):
@@ -131,8 +215,6 @@ def news_retrieve_node(state: AgentState):
     return {"context_chunks": [doc.page_content for doc in retrieved_docs]}
 
 # --- Node 6: CONVERSATIONAL ---
-# nodes.py
-
 def conversational_node(state: AgentState):
     print("\n💬 Node: Conversational (Receptionist Persona)...")
     question = state["question"]
@@ -173,45 +255,52 @@ def conversational_node(state: AgentState):
         "generated_answer": GeneratedAnswer(answer=response.content, sources_used=["Conversational"]),
         "context_chunks": []
     }
+
 # --- Node 7: GENERATE ---
 async def generate_node(state: AgentState):
-    print("\n✍️ Node: Generate (Streaming with Safety Guards)...")
-    context_data = "\n---\n".join(state["context_chunks"])
+    print("\n✍️ Node: Generate (Hybrid Mode)...")
+    context_chunks = state.get("context_chunks", [])
+    question = state["question"]
     today = datetime.now().strftime("%B %d, %Y")
     
-    # 1. Embed Safety Rules directly into System Prompt
-    # This replaces the need for the blocking 'output_guard_node'
-    system_prompt = f"""
-    You are an expert receptionist for LMKR.
-    
-    CRITICAL INSTRUCTIONS:
-    1. **Context Strictness**: Answer using ONLY the provided Context Data. If the answer is not in the context, explicitly state "I don't have enough information in my documents to answer that."
-    2. **Anti-Hallucination**: Do NOT invent dates, email addresses, or specific figures. If a specific date is not in the text, do not guess it.
-    3. **Competitor Block**: Do NOT mention or recommend competitors such as 'Schlumberger' or 'Securiti' under any circumstances.
-    4. **Safety**: Do not generate toxic, biased, or harmful content.
-    5. **Tone**: Be concise, professional, and helpful.
-    """
-    
-    user_prompt = f"""
-    Context Data:
-    {context_data}
-    
-    Current Date: {today}
-    User Question: {state['question']}
-    """
-    
-    llm = get_streaming_llm() #
+    # MODE A: CONVERSATIONAL (No Context)
+    if not context_chunks:
+        print("   Model: Conversational Mode")
+        system_prompt = """
+        You are the Virtual Receptionist for LMKR.
+        - The user's query did not trigger any database lookups, so it is likely a greeting or general chat.
+        - Be professional, warm, and concise.
+        - If the user asks a specific business question that YOU DO NOT know, admit it or suggest they ask about "Jobs", "News", or "GVERSE".
+        - Do NOT hallucinate company data.
+        """
+        user_content = question
+
+    # MODE B: RAG (Context Present)
+    else:
+        print(f"   Model: RAG Mode ({len(context_chunks)} chunks)")
+        context_data = "\n---\n".join(context_chunks)
+        system_prompt = f"""
+        You are an expert assistant for LMKR.
+        
+        CRITICAL INSTRUCTIONS:
+        1. Answer using ONLY the provided Context Data below.
+        2. If the answer is not in the context, state "I don't have that information in my current records."
+        3. Do not mention competitors like Schlumberger.
+        4. Be helpful and structure your answer clearly.
+        """
+        user_content = f"Context Data:\n{context_data}\n\nUser Question: {question}\nCurrent Date: {today}"
+
     messages = [
         SystemMessage(content=system_prompt),
-        HumanMessage(content=user_prompt)
+        HumanMessage(content=user_content)
     ]
     
-    # The stream happens in app.py. We just invoke here.
+    llm = get_streaming_llm()
     response = await llm.ainvoke(messages)
     
     return {
-        "generated_answer": GeneratedAnswer(answer=response.content, sources_used=["Context"]), 
-        "retry_count": state.get("retry_count", 0) + 1
+        "generated_answer": GeneratedAnswer(answer=response.content, sources_used=["Dynamic Tooling"]),
+        "context_chunks": context_chunks # Pass through for UI
     }
 
 # --- Node 8: OUTPUT GUARD ---
