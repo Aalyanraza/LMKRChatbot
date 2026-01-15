@@ -3,59 +3,51 @@
 from langgraph.graph import StateGraph, START, END
 from models import AgentState
 from nodes import (
-    router_node,
-    retrieve_node,
-    career_retrieve_node,
-    news_retrieve_node,
-    conversational_node,
+    decision_node,
+    tool_execution_node,
     generate_node,
     save_memory_node,
-    # input_guard_node, # Keeping import, removing from flow
-    # validate_node,    # Keeping import, removing from flow
-    # reflection_node   # Reflection requires validation/retries, so we skip it too
+    # input_guard_node # (Optional, if you want to use it)
 )
 
 # --- Build the Workflow Graph ---
 
 workflow = StateGraph(AgentState)
 
-# Add active nodes
-workflow.add_node("router_node", router_node)
-workflow.add_node("retrieve_node", retrieve_node)
-workflow.add_node("career_retrieve_node", career_retrieve_node)
-workflow.add_node("news_retrieve_node", news_retrieve_node)
-workflow.add_node("conversational_node", conversational_node)
+# 1. Add Nodes
+workflow.add_node("decision_node", decision_node)
+workflow.add_node("tool_execution_node", tool_execution_node)
 workflow.add_node("generate_node", generate_node)
 workflow.add_node("save_memory_node", save_memory_node)
 
-# Set entry point directly to Router (Skipping Input Guard)
-workflow.set_entry_point("router_node")
+# 2. Set Entry Point
+workflow.set_entry_point("decision_node")
 
-# Conditional edges from Router (Unchanged)
+# 3. Define Conditional Logic
+def route_decision(state):
+    if state.get("tool_calls") and len(state["tool_calls"]) > 0:
+        return "tool_execution_node"
+    return "generate_node"
+
+# 4. Add Conditional Edge
 workflow.add_conditional_edges(
-    "router_node",
-    lambda x: x["destination"],
+    "decision_node",
+    route_decision,
     {
-        "career_retrieve_node": "career_retrieve_node",
-        "news_retrieve_node": "news_retrieve_node",
-        "retrieve_node": "retrieve_node",
-        "conversational_node": "conversational_node"
+        "tool_execution_node": "tool_execution_node",
+        "generate_node": "generate_node"
     }
 )
 
-# Connect Retrieval Nodes to Generator (Unchanged)
-workflow.add_edge("career_retrieve_node", "generate_node")
-workflow.add_edge("news_retrieve_node", "generate_node")
-workflow.add_edge("retrieve_node", "generate_node")
+# 5. Connect Tool Execution to Generator
+# (Once tools run, we ALWAYS generate an answer)
+workflow.add_edge("tool_execution_node", "generate_node")
 
-# Generator -> Save Memory -> END (Skipping Validation & Output Guard)
+# 6. Connect Generator to Memory/End
 workflow.add_edge("generate_node", "save_memory_node")
 workflow.add_edge("save_memory_node", END)
 
-# Conversational Node -> END
-workflow.add_edge("conversational_node", END)
-
-# Compile the graph
+# Compile
 app = workflow.compile()
 
-print("✅ Linear Graph (No Guards/Validation) compiled successfully!")
+print("✅ Agentic Tool Graph (Decision -> [Tools] -> Generate) compiled!")
