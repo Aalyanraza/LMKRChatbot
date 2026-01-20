@@ -30,7 +30,7 @@ async def entrypoint(ctx: JobContext):
                 endpointing_ms=2000,
                 smart_format=True
             )
-            tts = openai.TTS(model="tts-1", voice="alloy")
+            tts = openai.TTS(model="tts-1", voice="nova")
             ai_ready_event.set()
             print("   ✅ AI Modules Ready!")
         except Exception as e:

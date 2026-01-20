@@ -167,8 +167,10 @@ def retrieve_node(state: AgentState):
     unique_context = list(set(all_docs))[:dynamic_k]
     print(f"   Retrieved {len(unique_context)} unique context chunks (Target: {dynamic_k}).")
     
-    # Debug log as requested
-    save_to_file("".join(unique_context), config.CONTEXT_DEBUG_FILE)
+    # Save all context retrieved to file
+    context_output = "\n---CHUNK---\n".join(unique_context)
+    save_to_file(context_output, config.CONTEXT_DEBUG_FILE)
+    print(f"   ✅ Context saved to {config.CONTEXT_DEBUG_FILE}")
     
     return {"context_chunks": unique_context}
 
@@ -192,7 +194,14 @@ def career_retrieve_node(state: AgentState):
     
     temp_vectorstore = FAISS.from_texts(split_text_into_chunks(raw_text), embeddings)
     retrieved_docs = temp_vectorstore.similarity_search(question, k=dynamic_k)
-    return {"context_chunks": [doc.page_content for doc in retrieved_docs]}
+    context_chunks = [doc.page_content for doc in retrieved_docs]
+    
+    # Save all context retrieved to file
+    context_output = "\n---CHUNK---\n".join(context_chunks)
+    save_to_file(context_output, config.CAREERS_OUTPUT_FILE + ".context")
+    print(f"   ✅ Career context saved to {config.CAREERS_OUTPUT_FILE}.context")
+    
+    return {"context_chunks": context_chunks}
 
 # --- Node 5: NEWS RETRIEVE ---
 def news_retrieve_node(state: AgentState):
@@ -212,7 +221,14 @@ def news_retrieve_node(state: AgentState):
 
     temp_vectorstore = FAISS.from_texts(split_text_into_chunks(raw_text), embeddings)
     retrieved_docs = temp_vectorstore.similarity_search(question, k=dynamic_k)
-    return {"context_chunks": [doc.page_content for doc in retrieved_docs]}
+    context_chunks = [doc.page_content for doc in retrieved_docs]
+    
+    # Save all context retrieved to file
+    context_output = "\n---CHUNK---\n".join(context_chunks)
+    save_to_file(context_output, config.NEWS_OUTPUT_FILE + ".context")
+    print(f"   ✅ News context saved to {config.NEWS_OUTPUT_FILE}.context")
+    
+    return {"context_chunks": context_chunks}
 
 # --- Node 6: CONVERSATIONAL ---
 def conversational_node(state: AgentState):
@@ -272,6 +288,7 @@ async def generate_node(state: AgentState):
         - Be professional, warm, and concise.
         - If the user asks a specific business question that YOU DO NOT know, admit it or suggest they ask about "Jobs", "News", or "GVERSE".
         - Do NOT hallucinate company data.
+        - if the user asks about the number of employees or headcount, tell them "LMKR has over 700 employees worldwide."
         """
         user_content = question
 
@@ -287,6 +304,8 @@ async def generate_node(state: AgentState):
         2. If the answer is not in the context, state "I don't have that information in my current records."
         3. Do not mention competitors like Schlumberger.
         4. Be helpful and structure your answer clearly.
+        5. If the user asks about the number of employees or headcount, tell them "LMKR has over 700 employees worldwide."
+        
         """
         user_content = f"Context Data:\n{context_data}\n\nUser Question: {question}\nCurrent Date: {today}"
 
